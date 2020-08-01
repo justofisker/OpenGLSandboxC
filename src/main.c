@@ -21,8 +21,6 @@
 static int width = 1920, height = 1080;
 Entity *entities[6];
 Sprite *crosshair;
-Sprite *watermark;
-Sprite *peter;
 clock_t last_frame;
 
 static void setup()
@@ -40,10 +38,10 @@ static void setup()
     entities[3]->scale[0] = 2.f;
     entities[3]->scale[1] = 2.f;
     entities[3]->rotation[2] = GLM_2_PI;
-    entities[0]->mesh->texture = generate_texture_from_file("res/texture/furret.jpg", GL_CLAMP_TO_EDGE);
-    entities[1]->mesh->texture = generate_texture_from_file("res/texture/gamer.jpg", GL_CLAMP_TO_EDGE);
-    entities[2]->mesh->texture = generate_texture_from_file("res/texture/isaac.png", GL_CLAMP_TO_EDGE);
-    entities[3]->mesh->texture = generate_texture_from_file("res/texture/isaac.png", GL_CLAMP_TO_EDGE);
+    entities[0]->mesh->texture = generate_texture_from_file("res/texture/128x128.png", GL_CLAMP_TO_EDGE);
+    entities[1]->mesh->texture = generate_texture_from_file("res/texture/128x128.png", GL_CLAMP_TO_EDGE);
+    entities[2]->mesh->texture = generate_texture_from_file("res/texture/128x128.png", GL_CLAMP_TO_EDGE);
+    entities[3]->mesh->texture = generate_texture_from_file("res/texture/128x128.png", GL_CLAMP_TO_EDGE);
     entities[4]->position[0]= -4.5f;
     entities[4]->scale[0] = 0.1f;
     entities[4]->scale[1] = 0.1f;
@@ -55,8 +53,6 @@ static void setup()
     entities[5]->scale[1] = 3.f;
 
     crosshair = create_sprite_from_file("res/texture/crosshair.png");
-    watermark = create_sprite_from_file("res/texture/hypercam.jpg");
-    peter = create_sprite_from_file("res/texture/peter.png");
 
     last_frame = clock();
     glEnable(GL_CULL_FACE);
@@ -172,9 +168,6 @@ static void display(void)
         draw_entity(entities[i], projView);
 
     draw_sprite(crosshair, width / 2, height / 2);
-    draw_sprite(watermark, width / 2, height - (float)watermark->texture->Height / 2 * 3 + 1);
-    draw_sprite(watermark, width / 2, height - (float)watermark->texture->Height / 2 + 1);
-    draw_sprite(peter, width - peter->texture->Width / 2, 0 + peter->texture->Height / 2);
 
     glutSwapBuffers();
     glutPostRedisplay();

@@ -7,6 +7,11 @@ const char* get_file_content(const char* path)
 {
     FILE* file;
     file = fopen(path, "rb");
+    if(!file)
+    {
+        printf("Failed to open %s", path);
+        return NULL;
+    }
     fseek(file, 0, SEEK_END);
     long fsize = ftell(file);
     fseek(file, 0, SEEK_SET);

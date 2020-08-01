@@ -61,7 +61,7 @@ Mesh* get_cube_mesh()
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->IndexBuffer);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicies), indicies, GL_STATIC_DRAW);
 
-    mesh->ShaderProgram = compile_shader("res/shader/textured_vertex.glsl", "res/shader/textured_fragment.glsl");
+    mesh->ShaderProgram = compile_shader("res/shader/texture_vertex.glsl", "res/shader/texture_fragment.glsl");
     glUseProgram(mesh->ShaderProgram);
     mesh->IndexCount = sizeof(indicies) / sizeof(Index);
     mesh->IndexType = GL_UNSIGNED_BYTE;
