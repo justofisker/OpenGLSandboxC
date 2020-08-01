@@ -35,11 +35,11 @@ static void setup()
     entities[1]->scale[0] = 2.f;
     entities[2]->position[1] = -4.f;
     entities[2]->scale[0] = 3.f;
-    entities[2]->rotation[1] = M_PI;
+    entities[2]->rotation[1] = GLM_PI;
     entities[3]->position[2] = -5.f;
     entities[3]->scale[0] = 2.f;
     entities[3]->scale[1] = 2.f;
-    entities[3]->rotation[2] = M_2_PI;
+    entities[3]->rotation[2] = GLM_2_PI;
     entities[0]->mesh->texture = generate_texture_from_file("res/texture/furret.jpg", GL_CLAMP_TO_EDGE);
     entities[1]->mesh->texture = generate_texture_from_file("res/texture/gamer.jpg", GL_CLAMP_TO_EDGE);
     entities[2]->mesh->texture = generate_texture_from_file("res/texture/isaac.png", GL_CLAMP_TO_EDGE);
@@ -50,8 +50,8 @@ static void setup()
     entities[4]->scale[2] = 0.1f;
     entities[5] = create_entity_from_mesh(get_cylinder_mesh(32));
     entities[5]->position[0] = -4.5f;
-    entities[5]->rotation[0] = -M_PI_2;
-    entities[5]->rotation[2] = M_PI_2;
+    entities[5]->rotation[0] = -GLM_PI_2;
+    entities[5]->rotation[2] = GLM_PI_2;
     entities[5]->scale[1] = 3.f;
 
     crosshair = create_sprite_from_file("res/texture/crosshair.png");
@@ -95,6 +95,7 @@ static void handle_movement(double delta)
     glm_vec3_add(direction, camera_position, camera_position);
 }
 
+#ifdef _WIN32
 static HWND self;
 
 static void handle_mouse()
@@ -112,6 +113,20 @@ static void handle_mouse()
     }
     active = focus && !pause;
 }
+#endif
+#ifdef __linux__
+static void handle_mouse()
+{
+    if(!pause)
+    {
+        glutWarpPointer(width / 2, height / 2);
+        glutSetCursor(GLUT_CURSOR_NONE);
+    } else {
+        glutSetCursor(GLUT_CURSOR_RIGHT_ARROW);
+    }
+    active = !pause;
+}
+#endif
 
 static float time_passed = 0;
 
@@ -121,7 +136,7 @@ static void mouse_motion(int x, int y)
     camera_rotation[0] += glm_rad(((float)y - height / 2) / 10);
     camera_rotation[0] = fmaxf(fminf(glm_rad(85.f), camera_rotation[0]), glm_rad(-85.f));
     camera_rotation[1] += glm_rad(((float)x - width / 2) / 10);
-    camera_rotation[1] = fmodf(camera_rotation[1], M_PI * 2);
+    camera_rotation[1] = fmodf(camera_rotation[1], GLM_PI * 2);
 }
 
 static void display(void)

@@ -6,11 +6,15 @@ enable_testing()
 
 add_executable(OpenGlSandboxC src/main.c src/Entity.c src/Mesh.c src/Util.c src/Texture.c src/Sprite.c src/stb_image.c thirdparty/glad/src/glad.c)
 
-add_subdirectory("thirdparty/assimp")
+#add_subdirectory("thirdparty/assimp")
 add_subdirectory("thirdparty/freeGLUT/freeglut/freeglut")
 
 target_link_libraries(OpenGlSandboxC freeglut_static)
 #target_link_libraries(OpenGlSandboxC assimp)
+
+if (UNIX)
+    target_link_libraries(OpenGlSandboxC dl)
+endif (UNIX)
 
 target_include_directories(OpenGlSandboxC PUBLIC
     "thirdparty/cglm/include"

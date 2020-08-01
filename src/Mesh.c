@@ -84,7 +84,7 @@ Mesh* get_cylinder_mesh(unsigned int detail)
     int i;
     for(int i = 0; i < detail; ++i)
     {
-        float theta = M_PI * 2 / detail * i;
+        float theta = GLM_PI * 2 / detail * i;
         float x = cosf(theta);
         float y = sinf(theta);
 
