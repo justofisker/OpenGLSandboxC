@@ -1,0 +1,12 @@
+[submodule "thirdparty/cglm"]
+	path = thirdparty/cglm
+	url = https://github.com/recp/cglm
+[submodule "thirdparty/assimp"]
+	path = thirdparty/assimp
+	url = https://github.com/assimp/assimp
+[submodule "thirdparty/freeGLUT"]
+	path = thirdparty/freeGLUT
+	url = https://github.com/dcnieho/freeGLUT
+[submodule "thirdparty/stb/include/stb"]
+	path = thirdparty/stb/include/stb
+	url = https://github.com/nothings/stb
