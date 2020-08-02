@@ -61,6 +61,8 @@ Sprite* create_sprite(Texture *texture)
     sprite->texture = texture;
     sprite->position[0] = 0.f;
     sprite->position[1] = 0.f;
+    sprite->scale[0] = 1.f;
+    sprite->scale[1] = 1.f;
     sprite->rotation = 0.f;
 
     return sprite;
@@ -80,12 +82,13 @@ void draw_sprite(Sprite* sprite)
     mat4 proj = GLM_MAT4_IDENTITY_INIT;
     glm_ortho((float)Viewport[0], (float)Viewport[2], (float)Viewport[1], (float)Viewport[3], 0.f, 1.f, proj);
     mat4 model = GLM_MAT4_IDENTITY_INIT;
-    glm_translate(model, (vec3){sprite->position[0] - (float)sprite->texture->width / 2, sprite->position[1] - (float)sprite->texture->height / 2, 0.f});
+    glm_translate(model, (vec3){sprite->position[0] - sprite->texture->width / 2.f * sprite->scale[0], sprite->position[1] - sprite->texture->height / 2.f * sprite->scale[1], 0.f});
+    glm_scale(model, (vec3){sprite->scale[0], sprite->scale[1], 1.f});
+    glm_rotate_z(model, sprite->rotation, model);
     glm_scale(model, (vec3){(float)sprite->texture->width, (float)sprite->texture->height, 0.f});
 
     mat4 mvp;
     glm_mat4_mul(proj, model, mvp);
-    //glm_mat4_mulN((mat4 *[]){&proj, &view, &model}, 3, mvp);
 
     glUniformMatrix4fv(MVP_loc, 1, GL_FALSE, mvp[0]);
 

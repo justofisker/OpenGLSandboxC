@@ -7,6 +7,7 @@ typedef float vec2[2];
 typedef struct Sprite {
     struct Texture* texture;
     vec2 position;
+    vec2 scale;
     float rotation;
 } Sprite;
 
