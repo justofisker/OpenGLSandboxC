@@ -8,6 +8,7 @@ typedef float vec3[3];
 
 typedef struct Entity {
     struct Mesh* mesh;
+    unsigned int ShaderProgram;
     vec3 position;
     vec3 rotation;
     vec3 scale;

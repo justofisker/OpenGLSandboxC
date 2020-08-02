@@ -8,7 +8,6 @@ typedef struct Mesh {
     unsigned int VertexArrayObject;
     unsigned int VertexBuffer;
     unsigned int IndexBuffer;
-    unsigned int ShaderProgram;
     struct Texture* texture;
 
     unsigned int IndexCount;

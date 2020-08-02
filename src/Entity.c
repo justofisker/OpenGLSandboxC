@@ -23,10 +23,10 @@ Entity* create_entity_from_mesh(struct Mesh* mesh)
 void draw_entity(Entity* entity, mat4 projView)
 {
     glBindVertexArray(entity->mesh->VertexArrayObject);
-    glUseProgram(entity->mesh->ShaderProgram);
+    glUseProgram(entity->ShaderProgram);
 
-    int mvp_loc = glGetUniformLocation(entity->mesh->ShaderProgram, "u_MVP");
-    int texture_loc = glGetUniformLocation(entity->mesh->ShaderProgram, "u_Texture");
+    int mvp_loc = glGetUniformLocation(entity->ShaderProgram, "u_MVP");
+    int texture_loc = glGetUniformLocation(entity->ShaderProgram, "u_Texture");
 
     if(entity->mesh->texture)
     {

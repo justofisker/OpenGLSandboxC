@@ -13,44 +13,49 @@
 #include "Mesh.h"
 #include "Texture.h"
 #include "Sprite.h"
+#include "Util.h"
 
 #include <time.h>
 
 #define WINDOW_TITLE "OpenGL SandboxC"
 
 static int width = 1920, height = 1080;
-Entity *entities[6];
+Entity *entities[5];
 Sprite *crosshair;
 clock_t last_frame;
 
 static void setup()
 {
-    //Mesh* cubeMesh = get_cube_mesh();
+    unsigned int texture_shader = compile_shader("res/shader/texture_vertex.glsl", "res/shader/texture_fragment.glsl");
+    unsigned int color_shader = compile_shader("res/shader/color_vertex.glsl", "res/shader/color_fragment.glsl");
+    Mesh *cubeMesh = get_cube_mesh();
     int i;
-    for (i = 0; i < 5; ++i)
-        entities[i] = create_entity_from_mesh(get_cube_mesh());
+    for (i = 0; i < 4; ++i) {
+        entities[i] = create_entity_from_mesh(cubeMesh);
+        entities[i]->ShaderProgram = texture_shader;
+    }
     entities[0]->position[0] = 4.5f;
     entities[1]->scale[0] = 2.f;
     entities[2]->position[1] = -4.f;
     entities[2]->scale[0] = 3.f;
     entities[2]->rotation[1] = (float)GLM_PI;
+    entities[3]->ShaderProgram = color_shader;
     entities[3]->position[2] = -5.f;
     entities[3]->scale[0] = 2.f;
     entities[3]->scale[1] = 2.f;
+    entities[3]->scale[2] = 2.f;
     entities[3]->rotation[2] = (float)GLM_2_PI;
     entities[0]->mesh->texture = generate_texture_from_file("res/texture/128x128.png", GL_CLAMP_TO_EDGE);
     entities[1]->mesh->texture = generate_texture_from_file("res/texture/128x128.png", GL_CLAMP_TO_EDGE);
     entities[2]->mesh->texture = generate_texture_from_file("res/texture/128x128.png", GL_CLAMP_TO_EDGE);
     entities[3]->mesh->texture = generate_texture_from_file("res/texture/128x128.png", GL_CLAMP_TO_EDGE);
-    entities[4]->position[0]= -4.5f;
-    entities[4]->scale[0] = 0.1f;
-    entities[4]->scale[1] = 0.1f;
-    entities[4]->scale[2] = 0.1f;
-    entities[5] = create_entity_from_mesh(get_cylinder_mesh(32));
-    entities[5]->position[0] = -4.5f;
-    entities[5]->rotation[0] = (float)-GLM_PI_2;
-    entities[5]->rotation[2] = (float)GLM_PI_2;
-    entities[5]->scale[1] = 3.f;
+    entities[4] = create_entity_from_mesh(get_cylinder_mesh(32));
+    entities[4]->mesh->texture = generate_texture_from_file("res/texture/128x128.png", GL_CLAMP_TO_EDGE);
+    entities[4]->ShaderProgram = texture_shader;
+    entities[4]->position[0] = -4.5f;
+    entities[4]->rotation[0] = (float)-GLM_PI_2;
+    entities[4]->rotation[2] = (float)GLM_PI_2;
+    entities[4]->scale[1] = 3.f;
 
     crosshair = create_sprite_from_file("res/texture/crosshair.png");
 
@@ -164,7 +169,7 @@ static void display(void)
     glm_mul(proj, view, projView);
 
     int i;
-    for(i = 0; i < 6; ++i)
+    for(i = 0; i < 5; ++i)
         draw_entity(entities[i], projView);
 
     draw_sprite(crosshair, width / 2, height / 2);
