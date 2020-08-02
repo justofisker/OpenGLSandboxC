@@ -8,7 +8,7 @@
 #endif
 #include <cglm/cglm.h>
 #include <math.h>
-#include "Entity.h"
+#include "Model.h"
 #include "Mesh.h"
 #include "Texture.h"
 #include "Sprite.h"
@@ -19,7 +19,7 @@
 #define WINDOW_TITLE "OpenGL SandboxC"
 
 static int width = 1920, height = 1080;
-Entity *entities[5];
+Model *models[5];
 Sprite *crosshair;
 clock_t last_frame;
 
@@ -31,31 +31,31 @@ static void setup()
     Texture *defaultTex = create_texture("res/texture/128x128.png", GL_LINEAR, GL_NEAREST, GL_CLAMP_TO_EDGE);
     int i;
     for (i = 0; i < 4; ++i) {
-        entities[i] = create_entity(cubeMesh);
-        entities[i]->shader_program = texture_shader;
+        models[i] = create_model(cubeMesh);
+        models[i]->shader_program = texture_shader;
     }
-    entities[0]->position[0] = 4.5f;
-    entities[1]->scale[0] = 2.f;
-    entities[2]->position[1] = -4.f;
-    entities[2]->scale[0] = 3.f;
-    entities[2]->rotation[1] = (float)GLM_PI;
-    entities[3]->shader_program = color_shader;
-    entities[3]->position[2] = -5.f;
-    entities[3]->scale[0] = 2.f;
-    entities[3]->scale[1] = 2.f;
-    entities[3]->scale[2] = 2.f;
-    entities[3]->rotation[2] = (float)GLM_2_PI;
-    entities[0]->mesh->texture = defaultTex;
-    entities[1]->mesh->texture = defaultTex;
-    entities[2]->mesh->texture = defaultTex;
-    entities[3]->mesh->texture = defaultTex;
-    entities[4] = create_entity(create_cylinder_mesh(32));
-    entities[4]->mesh->texture = defaultTex;
-    entities[4]->shader_program = texture_shader;
-    entities[4]->position[0] = -4.5f;
-    entities[4]->rotation[0] = (float)-GLM_PI_2;
-    entities[4]->rotation[2] = (float)GLM_PI_2;
-    entities[4]->scale[1] = 3.f;
+    models[0]->position[0] = 4.5f;
+    models[1]->scale[0] = 2.f;
+    models[2]->position[1] = -4.f;
+    models[2]->scale[0] = 3.f;
+    models[2]->rotation[1] = (float)GLM_PI;
+    models[3]->shader_program = color_shader;
+    models[3]->position[2] = -5.f;
+    models[3]->scale[0] = 2.f;
+    models[3]->scale[1] = 2.f;
+    models[3]->scale[2] = 2.f;
+    models[3]->rotation[2] = (float)GLM_2_PI;
+    models[0]->mesh->texture = defaultTex;
+    models[1]->mesh->texture = defaultTex;
+    models[2]->mesh->texture = defaultTex;
+    models[3]->mesh->texture = defaultTex;
+    models[4] = create_model(create_cylinder_mesh(32));
+    models[4]->mesh->texture = defaultTex;
+    models[4]->shader_program = texture_shader;
+    models[4]->position[0] = -4.5f;
+    models[4]->rotation[0] = (float)-GLM_PI_2;
+    models[4]->rotation[2] = (float)GLM_PI_2;
+    models[4]->scale[1] = 3.f;
 
     crosshair = create_sprite(create_texture("res/texture/crosshair.png", GL_NEAREST, GL_NEAREST, GL_CLAMP_TO_BORDER));
     crosshair->position[0] = width / 2.f;
@@ -154,10 +154,10 @@ static void display(void)
     glClearColor(1.0f, 0.2f, 0.7f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    entities[0]->rotation[0] += (float)delta;
-    entities[0]->rotation[1] += (float)delta;
-    entities[0]->rotation[2] += (float)delta;
-    entities[2]->position[0] = sinf(time_passed) * 2;
+    models[0]->rotation[0] += (float)delta;
+    models[0]->rotation[1] += (float)delta;
+    models[0]->rotation[2] += (float)delta;
+    models[2]->position[0] = sinf(time_passed) * 2;
 
     mat4 proj = GLM_MAT4_IDENTITY_INIT;
     mat4 view = GLM_MAT4_IDENTITY_INIT;
@@ -172,7 +172,7 @@ static void display(void)
 
     int i;
     for(i = 0; i < 5; ++i)
-        draw_entity(entities[i], projView);
+        draw_model(models[i], projView);
 
     draw_sprite(crosshair);
 

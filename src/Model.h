@@ -6,15 +6,15 @@
 struct Mesh;
 typedef float vec3[3];
 
-typedef struct Entity {
+typedef struct Model {
     struct Mesh* mesh;
     unsigned int shader_program;
     vec3 position;
     vec3 rotation;
     vec3 scale;
-} Entity;
+} Model;
 
-Entity* create_entity(struct Mesh* mesh);
-void draw_entity(Entity* entity, mat4 projView);
+Model* create_model(struct Mesh* mesh);
+void draw_model(Model* entity, mat4 projView);
 
 #endif // ENTITY_H

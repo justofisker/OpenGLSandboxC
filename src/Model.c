@@ -1,4 +1,4 @@
-#include "Entity.h"
+#include "Model.h"
 #include "Mesh.h"
 
 #include <stdlib.h>
@@ -8,9 +8,9 @@
 #include <cglm/cglm.h>
 #include "Texture.h"
 
-Entity* create_entity(struct Mesh* mesh)
+Model* create_model(struct Mesh* mesh)
 {
-    Entity* entity = malloc(sizeof(Entity));
+    Model* entity = malloc(sizeof(Model));
     entity->mesh = mesh;
     memset(entity->position, 0, sizeof(vec3) * 2);
     entity->scale[0] = 1.f;
@@ -19,7 +19,7 @@ Entity* create_entity(struct Mesh* mesh)
     return entity;
 }
 
-void draw_entity(Entity* entity, mat4 projView)
+void draw_model(Model* entity, mat4 projView)
 {
     glBindVertexArray(entity->mesh->vertex_array_object);
     glUseProgram(entity->shader_program);
