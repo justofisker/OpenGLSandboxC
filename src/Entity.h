@@ -8,13 +8,13 @@ typedef float vec3[3];
 
 typedef struct Entity {
     struct Mesh* mesh;
-    unsigned int ShaderProgram;
+    unsigned int shader_program;
     vec3 position;
     vec3 rotation;
     vec3 scale;
 } Entity;
 
-Entity* create_entity_from_mesh(struct Mesh* mesh);
+Entity* create_entity(struct Mesh* mesh);
 void draw_entity(Entity* entity, mat4 projView);
 
 #endif // ENTITY_H

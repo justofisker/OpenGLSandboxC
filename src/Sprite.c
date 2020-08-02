@@ -28,7 +28,7 @@ static Index indicies[6] = {
     2, 3, 0,
 };
 
-Sprite* create_sprite_from_file(const char* file_path)
+Sprite* create_sprite(Texture *texture)
 {
     Sprite *sprite = malloc(sizeof(Sprite));
 
@@ -58,12 +58,15 @@ Sprite* create_sprite_from_file(const char* file_path)
         initialized = 1;
     }
 
-    sprite->texture = generate_texture_from_file(file_path, GL_CLAMP_TO_BORDER);
+    sprite->texture = texture;
+    sprite->position[0] = 0.f;
+    sprite->position[1] = 0.f;
+    sprite->rotation = 0.f;
 
     return sprite;
 }
 
-void draw_sprite(Sprite* sprite, unsigned int x, unsigned int y)
+void draw_sprite(Sprite* sprite)
 {
     int Viewport[4];
     glGetIntegerv(GL_VIEWPORT, Viewport);
@@ -77,8 +80,8 @@ void draw_sprite(Sprite* sprite, unsigned int x, unsigned int y)
     mat4 proj = GLM_MAT4_IDENTITY_INIT;
     glm_ortho((float)Viewport[0], (float)Viewport[2], (float)Viewport[1], (float)Viewport[3], 0.f, 1.f, proj);
     mat4 model = GLM_MAT4_IDENTITY_INIT;
-    glm_translate(model, (vec3){x - (float)sprite->texture->Width / 2, y - (float)sprite->texture->Height / 2, 0.f});
-    glm_scale(model, (vec3){(float)sprite->texture->Width, (float)sprite->texture->Height, 0.f});
+    glm_translate(model, (vec3){sprite->position[0] - (float)sprite->texture->width / 2, sprite->position[1] - (float)sprite->texture->height / 2, 0.f});
+    glm_scale(model, (vec3){(float)sprite->texture->width, (float)sprite->texture->height, 0.f});
 
     mat4 mvp;
     glm_mat4_mul(proj, model, mvp);

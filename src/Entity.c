@@ -6,10 +6,9 @@
 #include <stdio.h>
 #include <glad/glad.h>
 #include <cglm/cglm.h>
-#include <cglm/struct.h>
 #include "Texture.h"
 
-Entity* create_entity_from_mesh(struct Mesh* mesh)
+Entity* create_entity(struct Mesh* mesh)
 {
     Entity* entity = malloc(sizeof(Entity));
     entity->mesh = mesh;
@@ -22,11 +21,11 @@ Entity* create_entity_from_mesh(struct Mesh* mesh)
 
 void draw_entity(Entity* entity, mat4 projView)
 {
-    glBindVertexArray(entity->mesh->VertexArrayObject);
-    glUseProgram(entity->ShaderProgram);
+    glBindVertexArray(entity->mesh->vertex_array_object);
+    glUseProgram(entity->shader_program);
 
-    int mvp_loc = glGetUniformLocation(entity->ShaderProgram, "u_MVP");
-    int texture_loc = glGetUniformLocation(entity->ShaderProgram, "u_Texture");
+    int mvp_loc = glGetUniformLocation(entity->shader_program, "u_MVP");
+    int texture_loc = glGetUniformLocation(entity->shader_program, "u_Texture");
 
     if(entity->mesh->texture)
     {
@@ -46,7 +45,7 @@ void draw_entity(Entity* entity, mat4 projView)
 
     glUniformMatrix4fv(mvp_loc, 1, GL_FALSE, mvp[0]);
 
-    glDrawElements(GL_TRIANGLES, entity->mesh->IndexCount, entity->mesh->IndexType, NULL);
+    glDrawElements(GL_TRIANGLES, entity->mesh->index_count, entity->mesh->index_type, NULL);
 
     glBindVertexArray(0);
 }

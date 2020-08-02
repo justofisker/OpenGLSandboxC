@@ -4,7 +4,7 @@
 #include <glad/glad.h>
 #include <cglm/cglm.h>
 
-Mesh* get_cube_mesh()
+Mesh* create_cube_mesh()
 {
     typedef struct vertex
     {
@@ -43,11 +43,11 @@ Mesh* get_cube_mesh()
 
     Mesh* mesh = malloc(sizeof(Mesh));
 
-    glGenVertexArrays(1, &mesh->VertexArrayObject);
-    glBindVertexArray(mesh->VertexArrayObject);
+    glGenVertexArrays(1, &mesh->vertex_array_object);
+    glBindVertexArray(mesh->vertex_array_object);
 
-    glGenBuffers(1, &mesh->VertexBuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, mesh->VertexBuffer);
+    glGenBuffers(1, &mesh->vertex_buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, mesh->vertex_buffer);
     glBufferData(GL_ARRAY_BUFFER, sizeof(verticies), verticies, GL_STATIC_DRAW);
 
     glEnableVertexAttribArray(0);
@@ -57,19 +57,19 @@ Mesh* get_cube_mesh()
     glEnableVertexAttribArray(2);
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, tex_x));
 
-    glGenBuffers(1, &mesh->IndexBuffer);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->IndexBuffer);
+    glGenBuffers(1, &mesh->index_buffer);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->index_buffer);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicies), indicies, GL_STATIC_DRAW);
 
-    mesh->IndexCount = sizeof(indicies) / sizeof(Index);
-    mesh->IndexType = GL_UNSIGNED_BYTE;
+    mesh->index_count = sizeof(indicies) / sizeof(Index);
+    mesh->index_type = GL_UNSIGNED_BYTE;
 
     mesh->texture = NULL;
 
     return mesh;
 }
 
-Mesh* get_cylinder_mesh(unsigned int detail)
+Mesh* create_cylinder_mesh(unsigned int detail)
 {
     typedef struct Vertex {
         float x, y, z;
@@ -118,7 +118,7 @@ Mesh* get_cylinder_mesh(unsigned int detail)
     verticies[detail * 2 + 1].r = 0;
     verticies[detail * 2 + 1].g = 0;
     verticies[detail * 2 + 1].b = 1;
-    verticies[detail * 2 + 1].tex_x = 0.f;
+    verticies[detail * 2 + 1].tex_x = 1.f;
     verticies[detail * 2 + 1].tex_y = 1.f;
 
     typedef unsigned int Index;
@@ -147,11 +147,11 @@ Mesh* get_cylinder_mesh(unsigned int detail)
 
     Mesh* mesh = malloc(sizeof(Mesh));
 
-    glGenVertexArrays(1, &mesh->VertexArrayObject);
-    glBindVertexArray(mesh->VertexArrayObject);
+    glGenVertexArrays(1, &mesh->vertex_array_object);
+    glBindVertexArray(mesh->vertex_array_object);
 
-    glGenBuffers(1, &mesh->VertexBuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, mesh->VertexBuffer);
+    glGenBuffers(1, &mesh->vertex_buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, mesh->vertex_buffer);
     glBufferData(GL_ARRAY_BUFFER, verticies_size, verticies, GL_STATIC_DRAW);
 
     glEnableVertexAttribArray(0);
@@ -161,12 +161,12 @@ Mesh* get_cylinder_mesh(unsigned int detail)
     glEnableVertexAttribArray(2);
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, tex_x));
 
-    glGenBuffers(1, &mesh->IndexBuffer);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->IndexBuffer);
+    glGenBuffers(1, &mesh->index_buffer);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->index_buffer);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicies_size, indicies, GL_STATIC_DRAW);
 
-    mesh->IndexCount = indicies_size / sizeof(Index);
-    mesh->IndexType = GL_UNSIGNED_INT;
+    mesh->index_count = indicies_size / sizeof(Index);
+    mesh->index_type = GL_UNSIGNED_INT;
 
     mesh->texture = NULL;
 
@@ -178,6 +178,8 @@ Mesh* get_cylinder_mesh(unsigned int detail)
 
 void free_mesh(Mesh* mesh)
 {
-    glDeleteVertexArrays(1, &mesh->VertexArrayObject);
-    glDeleteBuffers(2, &mesh->VertexBuffer);
+    glDeleteVertexArrays(1, &mesh->vertex_array_object);
+    glDeleteBuffers(1, &mesh->vertex_buffer);
+    glDeleteBuffers(1, &mesh->index_buffer);
+    free(mesh);
 }

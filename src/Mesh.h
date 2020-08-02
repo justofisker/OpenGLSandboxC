@@ -5,17 +5,17 @@ typedef unsigned int GLenum;
 struct Texture;
 
 typedef struct Mesh {
-    unsigned int VertexArrayObject;
-    unsigned int VertexBuffer;
-    unsigned int IndexBuffer;
+    unsigned int vertex_array_object;
+    unsigned int vertex_buffer;
+    unsigned int index_buffer;
     struct Texture* texture;
 
-    unsigned int IndexCount;
-    GLenum IndexType;
+    unsigned int index_count;
+    GLenum index_type;
 } Mesh;
 
-Mesh* get_cube_mesh();
-Mesh* get_cylinder_mesh(unsigned int detail);
+Mesh* create_cube_mesh();
+Mesh* create_cylinder_mesh(unsigned int detail);
 void free_mesh(Mesh* mesh);
 
 #endif // MESH_H

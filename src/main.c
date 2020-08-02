@@ -7,7 +7,6 @@
 #include <GL/glut.h>
 #endif
 #include <cglm/cglm.h>
-#include <cglm/struct.h>
 #include <math.h>
 #include "Entity.h"
 #include "Mesh.h"
@@ -28,36 +27,39 @@ static void setup()
 {
     unsigned int texture_shader = compile_shader("res/shader/texture_vertex.glsl", "res/shader/texture_fragment.glsl");
     unsigned int color_shader = compile_shader("res/shader/color_vertex.glsl", "res/shader/color_fragment.glsl");
-    Mesh *cubeMesh = get_cube_mesh();
+    Mesh *cubeMesh = create_cube_mesh();
+    Texture *defaultTex = create_texture("res/texture/128x128.png", GL_LINEAR, GL_NEAREST, GL_CLAMP_TO_EDGE);
     int i;
     for (i = 0; i < 4; ++i) {
-        entities[i] = create_entity_from_mesh(cubeMesh);
-        entities[i]->ShaderProgram = texture_shader;
+        entities[i] = create_entity(cubeMesh);
+        entities[i]->shader_program = texture_shader;
     }
     entities[0]->position[0] = 4.5f;
     entities[1]->scale[0] = 2.f;
     entities[2]->position[1] = -4.f;
     entities[2]->scale[0] = 3.f;
     entities[2]->rotation[1] = (float)GLM_PI;
-    entities[3]->ShaderProgram = color_shader;
+    entities[3]->shader_program = color_shader;
     entities[3]->position[2] = -5.f;
     entities[3]->scale[0] = 2.f;
     entities[3]->scale[1] = 2.f;
     entities[3]->scale[2] = 2.f;
     entities[3]->rotation[2] = (float)GLM_2_PI;
-    entities[0]->mesh->texture = generate_texture_from_file("res/texture/128x128.png", GL_CLAMP_TO_EDGE);
-    entities[1]->mesh->texture = generate_texture_from_file("res/texture/128x128.png", GL_CLAMP_TO_EDGE);
-    entities[2]->mesh->texture = generate_texture_from_file("res/texture/128x128.png", GL_CLAMP_TO_EDGE);
-    entities[3]->mesh->texture = generate_texture_from_file("res/texture/128x128.png", GL_CLAMP_TO_EDGE);
-    entities[4] = create_entity_from_mesh(get_cylinder_mesh(32));
-    entities[4]->mesh->texture = generate_texture_from_file("res/texture/128x128.png", GL_CLAMP_TO_EDGE);
-    entities[4]->ShaderProgram = texture_shader;
+    entities[0]->mesh->texture = defaultTex;
+    entities[1]->mesh->texture = defaultTex;
+    entities[2]->mesh->texture = defaultTex;
+    entities[3]->mesh->texture = defaultTex;
+    entities[4] = create_entity(create_cylinder_mesh(32));
+    entities[4]->mesh->texture = defaultTex;
+    entities[4]->shader_program = texture_shader;
     entities[4]->position[0] = -4.5f;
     entities[4]->rotation[0] = (float)-GLM_PI_2;
     entities[4]->rotation[2] = (float)GLM_PI_2;
     entities[4]->scale[1] = 3.f;
 
-    crosshair = create_sprite_from_file("res/texture/crosshair.png");
+    crosshair = create_sprite(create_texture("res/texture/crosshair.png", GL_NEAREST, GL_NEAREST, GL_CLAMP_TO_BORDER));
+    crosshair->position[0] = width / 2.f;
+    crosshair->position[1] = height / 2.f;
 
     last_frame = clock();
     glEnable(GL_CULL_FACE);
@@ -172,7 +174,7 @@ static void display(void)
     for(i = 0; i < 5; ++i)
         draw_entity(entities[i], projView);
 
-    draw_sprite(crosshair, width / 2, height / 2);
+    draw_sprite(crosshair);
 
     glutSwapBuffers();
     glutPostRedisplay();
@@ -249,6 +251,8 @@ static void reshape(int w, int h)
     width = w > 1 ? w : 1;
     height = h > 1 ? h : 1;
     glViewport(0, 0, width, height);
+    crosshair->position[0] = width / 2.f;
+    crosshair->position[1] = height / 2.f;
     glClearDepth(1.0);
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glEnable(GL_DEPTH_TEST);

@@ -2,12 +2,15 @@
 #define SPRITE_H
 
 struct Texture;
+typedef float vec2[2];
 
 typedef struct Sprite {
     struct Texture* texture;
+    vec2 position;
+    float rotation;
 } Sprite;
 
-Sprite* create_sprite_from_file(const char* file_path);
-void draw_sprite(Sprite* sprite, unsigned int x, unsigned int y);
+Sprite* create_sprite(struct Texture *sprite);
+void draw_sprite(Sprite *sprite);
 
 #endif // SPRITE_H
