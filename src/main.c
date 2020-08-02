@@ -33,11 +33,11 @@ static void setup()
     entities[1]->scale[0] = 2.f;
     entities[2]->position[1] = -4.f;
     entities[2]->scale[0] = 3.f;
-    entities[2]->rotation[1] = GLM_PI;
+    entities[2]->rotation[1] = (float)GLM_PI;
     entities[3]->position[2] = -5.f;
     entities[3]->scale[0] = 2.f;
     entities[3]->scale[1] = 2.f;
-    entities[3]->rotation[2] = GLM_2_PI;
+    entities[3]->rotation[2] = (float)GLM_2_PI;
     entities[0]->mesh->texture = generate_texture_from_file("res/texture/128x128.png", GL_CLAMP_TO_EDGE);
     entities[1]->mesh->texture = generate_texture_from_file("res/texture/128x128.png", GL_CLAMP_TO_EDGE);
     entities[2]->mesh->texture = generate_texture_from_file("res/texture/128x128.png", GL_CLAMP_TO_EDGE);
@@ -48,8 +48,8 @@ static void setup()
     entities[4]->scale[2] = 0.1f;
     entities[5] = create_entity_from_mesh(get_cylinder_mesh(32));
     entities[5]->position[0] = -4.5f;
-    entities[5]->rotation[0] = -GLM_PI_2;
-    entities[5]->rotation[2] = GLM_PI_2;
+    entities[5]->rotation[0] = (float)-GLM_PI_2;
+    entities[5]->rotation[2] = (float)GLM_PI_2;
     entities[5]->scale[1] = 3.f;
 
     crosshair = create_sprite_from_file("res/texture/crosshair.png");
@@ -68,7 +68,7 @@ static vec3 camera_rotation = {0.f, 0.f, 0.f};
 static unsigned char forward = 0, back = 0, left = 0, right = 0 , up = 0, down = 0;
 static unsigned char active = 0, pause = 0, focus = 0;
 
-static void handle_movement(double delta)
+static void handle_movement(float delta)
 {
     if(!active) return;
     vec3 direction = {0.f, 0.f, 0.f};
@@ -86,7 +86,7 @@ static void handle_movement(double delta)
         direction[1] -= 1.f;
     glm_vec3_norm(direction);
     glm_vec3_rotate(direction, -1.f * camera_rotation[1], (vec3){0.f, 1.f, 0.f});
-    delta *= 7.5;
+    delta *= 7.5f;
     glm_vec3_mul(direction, (vec3){delta, delta, delta}, direction);
     glm_vec3_add(direction, camera_position, camera_position);
 }
@@ -132,24 +132,24 @@ static void mouse_motion(int x, int y)
     camera_rotation[0] += glm_rad(((float)y - height / 2) / 10);
     camera_rotation[0] = fmaxf(fminf(glm_rad(85.f), camera_rotation[0]), glm_rad(-85.f));
     camera_rotation[1] += glm_rad(((float)x - width / 2) / 10);
-    camera_rotation[1] = fmodf(camera_rotation[1], GLM_PI * 2);
+    camera_rotation[1] = fmodf(camera_rotation[1], (float)GLM_PI * 2);
 }
 
 static void display(void)
 {
     clock_t cur_time = clock();
-    double delta = (cur_time - last_frame) / (double)(CLOCKS_PER_SEC);
+    float delta = (cur_time - last_frame) / (float)(CLOCKS_PER_SEC);
     handle_mouse();
     handle_movement(delta);
     last_frame = cur_time;
-    time_passed += delta;
+    time_passed += (float)delta;
 
     glClearColor(1.0f, 0.2f, 0.7f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    entities[0]->rotation[0] += delta;
-    entities[0]->rotation[1] += delta;
-    entities[0]->rotation[2] += delta;
+    entities[0]->rotation[0] += (float)delta;
+    entities[0]->rotation[1] += (float)delta;
+    entities[0]->rotation[2] += (float)delta;
     entities[2]->position[0] = sinf(time_passed) * 2;
 
     mat4 proj = GLM_MAT4_IDENTITY_INIT;
