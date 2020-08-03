@@ -2,13 +2,13 @@
 #define MESH_H
 
 typedef unsigned int GLenum;
-struct Texture;
+typedef struct _Texture Texture;
 
-typedef struct Mesh {
+typedef struct _Mesh {
     unsigned int vertex_array_object;
     unsigned int vertex_buffer;
     unsigned int index_buffer;
-    struct Texture* texture;
+    Texture *texture;
 
     unsigned int index_count;
     GLenum index_type;
@@ -16,6 +16,6 @@ typedef struct Mesh {
 
 Mesh* create_cube_mesh();
 Mesh* create_cylinder_mesh(unsigned int detail);
-void free_mesh(Mesh* mesh);
+void free_mesh(Mesh *mesh);
 
 #endif // MESH_H

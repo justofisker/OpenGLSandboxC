@@ -3,18 +3,18 @@
 
 #include <cglm/cglm.h>
 
-struct Mesh;
+typedef struct _Mesh Mesh;
 typedef float vec3[3];
 
-typedef struct Model {
-    struct Mesh* mesh;
+typedef struct _Model {
+    Mesh *mesh;
     unsigned int shader_program;
     vec3 position;
     vec3 rotation;
     vec3 scale;
 } Model;
 
-Model* create_model(struct Mesh* mesh);
-void draw_model(Model* entity, mat4 projView);
+Model* create_model(Mesh *mesh);
+void draw_model(Model *entity, mat4 projView);
 
 #endif // ENTITY_H

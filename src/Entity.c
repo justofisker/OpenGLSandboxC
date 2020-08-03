@@ -14,7 +14,7 @@ Entity *create_entity(void *drawable, enum EntityType type)
     return entity;
 }
 
-void draw_entity(Entity* entity, mat4 proj_view)
+void draw_entity(Entity *entity, mat4 proj_view)
 {
     switch(entity->type)
     {

@@ -22,7 +22,6 @@
 static int width = 1920, height = 1080;
 
 Entity *entities[6];
-
 Model *models[5];
 Sprite *crosshair;
 clock_t last_frame;
@@ -32,12 +31,12 @@ static void setup()
     unsigned int texture_shader = compile_shader("res/shader/texture_vertex.glsl", "res/shader/texture_fragment.glsl");
     unsigned int color_shader = compile_shader("res/shader/color_vertex.glsl", "res/shader/color_fragment.glsl");
 
-    Mesh *cubeMesh = create_cube_mesh();
-    Texture *defaultTex = create_texture("res/texture/128x128.png", GL_LINEAR, GL_NEAREST, GL_CLAMP_TO_EDGE);
+    Mesh *cube_mesh = create_cube_mesh();
+    Texture *default_tex = create_texture("res/texture/128x128.png", GL_LINEAR, GL_NEAREST, GL_CLAMP_TO_EDGE);
     
     int i;
     for (i = 0; i < 4; ++i) {
-        models[i] = create_model(cubeMesh);
+        models[i] = create_model(cube_mesh);
         models[i]->shader_program = texture_shader;
     }
     models[0]->position[0] = 4.5f;
@@ -51,12 +50,12 @@ static void setup()
     models[3]->scale[1] = 2.f;
     models[3]->scale[2] = 2.f;
     models[3]->rotation[2] = (float)GLM_2_PI;
-    models[0]->mesh->texture = defaultTex;
-    models[1]->mesh->texture = defaultTex;
-    models[2]->mesh->texture = defaultTex;
-    models[3]->mesh->texture = defaultTex;
+    models[0]->mesh->texture = default_tex;
+    models[1]->mesh->texture = default_tex;
+    models[2]->mesh->texture = default_tex;
+    models[3]->mesh->texture = default_tex;
     models[4] = create_model(create_cylinder_mesh(32));
-    models[4]->mesh->texture = defaultTex;
+    models[4]->mesh->texture = default_tex;
     models[4]->shader_program = texture_shader;
     models[4]->position[0] = -4.5f;
     models[4]->rotation[0] = (float)-GLM_PI_2;

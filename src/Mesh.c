@@ -4,7 +4,7 @@
 #include <glad/glad.h>
 #include <cglm/cglm.h>
 
-Mesh* create_cube_mesh()
+Mesh *create_cube_mesh()
 {
     typedef struct vertex
     {
@@ -41,7 +41,7 @@ Mesh* create_cube_mesh()
         7, 3, 2,
     };
 
-    Mesh* mesh = malloc(sizeof(Mesh));
+    Mesh *mesh = malloc(sizeof(Mesh));
 
     glGenVertexArrays(1, &mesh->vertex_array_object);
     glBindVertexArray(mesh->vertex_array_object);
@@ -69,7 +69,7 @@ Mesh* create_cube_mesh()
     return mesh;
 }
 
-Mesh* create_cylinder_mesh(unsigned int detail)
+Mesh *create_cylinder_mesh(unsigned int detail)
 {
     typedef struct Vertex {
         float x, y, z;
@@ -123,26 +123,26 @@ Mesh* create_cylinder_mesh(unsigned int detail)
 
     typedef unsigned int Index;
 
-    size_t indicies_size = sizeof(Index) * (detail * 6 + detail * 6);
+    size_t indicies_size = sizeof(Index) * (detail * 12);
     Index *indicies = malloc(indicies_size);
 
     for(int i = 0; i < detail; ++i)
     {
-        indicies[i * 6 + 0] = ( 0 + i                   );
-        indicies[i * 6 + 1] = ((1 + i) % detail         );
-        indicies[i * 6 + 2] = ((1 + i) % detail + detail);
-        indicies[i * 6 + 3] = ((1 + i) % detail + detail);
-        indicies[i * 6 + 4] = ( 0 + i           + detail);
-        indicies[i * 6 + 5] = ( 0 + i                   );
+        indicies[i * 6 + 0] = (0 + i);
+        indicies[i * 6 + 1] = (1 + i) % detail;
+        indicies[i * 6 + 2] = (1 + i) % detail + detail;
+        indicies[i * 6 + 3] = (1 + i) % detail + detail;
+        indicies[i * 6 + 4] = (0 + i)          + detail;
+        indicies[i * 6 + 5] = (0 + i);
     }
     for(int i = 0; i < detail; ++i)
     {
-        indicies[detail * 6 + i * 6 + 0] = detail * 2;
-        indicies[detail * 6 + i * 6 + 1] = (1 + i) % detail;
-        indicies[detail * 6 + i * 6 + 2] = 0 + i;
-        indicies[detail * 6 + i * 6 + 3] = 0 + i + detail;
-        indicies[detail * 6 + i * 6 + 4] = (1 + i) % detail + detail;
-        indicies[detail * 6 + i * 6 + 5] = detail * 2 + 1;
+        indicies[(detail + i) * 6 + 0] = detail * 2;
+        indicies[(detail + i) * 6 + 1] = (1 + i) % detail;
+        indicies[(detail + i) * 6 + 2] = (0 + i);
+        indicies[(detail + i) * 6 + 3] = (0 + i)          + detail;
+        indicies[(detail + i) * 6 + 4] = (1 + i) % detail + detail;
+        indicies[(detail + i) * 6 + 5] = detail * 2 + 1;
     }
 
     Mesh* mesh = malloc(sizeof(Mesh));
@@ -165,7 +165,7 @@ Mesh* create_cylinder_mesh(unsigned int detail)
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->index_buffer);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicies_size, indicies, GL_STATIC_DRAW);
 
-    mesh->index_count = indicies_size / sizeof(Index);
+    mesh->index_count = detail * 12;
     mesh->index_type = GL_UNSIGNED_INT;
 
     mesh->texture = NULL;

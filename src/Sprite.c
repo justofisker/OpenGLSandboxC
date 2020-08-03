@@ -6,8 +6,8 @@
 #include <cglm/cglm.h>
 
 static int initialized = 0;
-static unsigned int VertexArrayObject, VertexBuffer, IndexBuffer, ShaderProgram;
-static unsigned int MVP_loc, Texture_loc;
+static unsigned int vertex_array_object, vertex_buffer, index_buffer, shader_program;
+static unsigned int mvp_loc, texture_loc;
 
 typedef struct Vertex {
     float x, y;
@@ -34,11 +34,11 @@ Sprite* create_sprite(Texture *texture)
 
     if(!initialized)
     {
-        glGenVertexArrays(1, &VertexArrayObject);
-        glBindVertexArray(VertexArrayObject);
+        glGenVertexArrays(1, &vertex_array_object);
+        glBindVertexArray(vertex_array_object);
 
-        glGenBuffers(1, &VertexBuffer);
-        glBindBuffer(GL_ARRAY_BUFFER, VertexBuffer);
+        glGenBuffers(1, &vertex_buffer);
+        glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
         glBufferData(GL_ARRAY_BUFFER, sizeof(verticies), &verticies, GL_STATIC_DRAW);
 
         glEnableVertexAttribArray(0);
@@ -46,14 +46,14 @@ Sprite* create_sprite(Texture *texture)
         glEnableVertexAttribArray(1);
         glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, tex_x));
 
-        glGenBuffers(1, &IndexBuffer);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IndexBuffer);
+        glGenBuffers(1, &index_buffer);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicies), &indicies, GL_STATIC_DRAW);
 
-        ShaderProgram = compile_shader("res/shader/sprite_vertex.glsl", "res/shader/sprite_fragment.glsl");
+        shader_program = compile_shader("res/shader/sprite_vertex.glsl", "res/shader/sprite_fragment.glsl");
 
-        MVP_loc = glGetUniformLocation(ShaderProgram, "u_MVP");
-        Texture_loc = glGetUniformLocation(ShaderProgram, "u_Texture");
+        mvp_loc = glGetUniformLocation(shader_program, "u_MVP");
+        texture_loc = glGetUniformLocation(shader_program, "u_Texture");
 
         initialized = 1;
     }
@@ -70,17 +70,17 @@ Sprite* create_sprite(Texture *texture)
 
 void draw_sprite(Sprite* sprite)
 {
-    int Viewport[4];
-    glGetIntegerv(GL_VIEWPORT, Viewport);
+    int viewport[4];
+    glGetIntegerv(GL_VIEWPORT, viewport);
 
-    glBindVertexArray(VertexArrayObject);
-    glUseProgram(ShaderProgram);
+    glBindVertexArray(vertex_array_object);
+    glUseProgram(shader_program);
 
     bind_texture(sprite->texture, 0);
-    glUniform1i(Texture_loc, 0);
+    glUniform1i(texture_loc, 0);
 
     mat4 proj = GLM_MAT4_IDENTITY_INIT;
-    glm_ortho((float)Viewport[0], (float)Viewport[2], (float)Viewport[1], (float)Viewport[3], 0.f, 1.f, proj);
+    glm_ortho((float)viewport[0], (float)viewport[2], (float)viewport[1], (float)viewport[3], 0.f, 1.f, proj);
     mat4 model = GLM_MAT4_IDENTITY_INIT;
     glm_translate(model, (vec3){sprite->position[0] - sprite->texture->width / 2.f * sprite->scale[0], sprite->position[1] - sprite->texture->height / 2.f * sprite->scale[1], 0.f});
     glm_scale(model, (vec3){sprite->scale[0], sprite->scale[1], 1.f});
@@ -90,7 +90,7 @@ void draw_sprite(Sprite* sprite)
     mat4 mvp;
     glm_mat4_mul(proj, model, mvp);
 
-    glUniformMatrix4fv(MVP_loc, 1, GL_FALSE, mvp[0]);
+    glUniformMatrix4fv(mvp_loc, 1, GL_FALSE, mvp[0]);
 
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, NULL);
     
