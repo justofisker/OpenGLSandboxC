@@ -21,21 +21,96 @@
 
 static int width = 1920, height = 1080;
 
-Entity *entities[6];
-Model *models[5];
+Entity *entities[7];
+Model *models[6];
 Sprite *crosshair;
 clock_t last_frame;
+
+unsigned int shaded_cube_vao, shaded_cube_shader, shaded_cube_vertex_count = 36;
+unsigned int shaded_cube_u_model, shaded_cube_u_view, shaded_cube_u_projection, shaded_cube_u_view_pos, shaded_cube_u_light_pos, shaded_cube_u_light_color, shaded_cube_u_object_color;
+
+float shaded_cube_verticies[] = {
+        -1.f, -1.f,  1.f  ,  0.0f,  0.0f, 1.0f, // 0
+         1.f, -1.f,  1.f  ,  0.0f,  0.0f, 1.0f, // 1
+         1.f,  1.f,  1.f  ,  0.0f,  0.0f, 1.0f, // 2
+         1.f,  1.f,  1.f  ,  0.0f,  0.0f, 1.0f, // 2
+        -1.f,  1.f,  1.f  ,  0.0f,  0.0f, 1.0f, // 3
+        -1.f, -1.f,  1.f  ,  0.0f,  0.0f, 1.0f, // 0
+
+         1.f, -1.f,  1.f  ,  1.0f,  0.0f,  0.0f, // 1
+         1.f, -1.f, -1.f  ,  1.0f,  0.0f,  0.0f, // 5
+         1.f,  1.f, -1.f  ,  1.0f,  0.0f,  0.0f, // 6
+         1.f,  1.f, -1.f  ,  1.0f,  0.0f,  0.0f, // 6
+         1.f,  1.f,  1.f  ,  1.0f,  0.0f,  0.0f, // 2
+         1.f, -1.f,  1.f  ,  1.0f,  0.0f,  0.0f, // 1
+
+         1.f,  1.f, -1.f  ,  0.0f,  0.0f, -1.0f, // 6
+         1.f, -1.f, -1.f  ,  0.0f,  0.0f, -1.0f, // 5
+        -1.f, -1.f, -1.f  ,  0.0f,  0.0f, -1.0f, // 4
+        -1.f, -1.f, -1.f  ,  0.0f,  0.0f, -1.0f, // 4
+        -1.f,  1.f, -1.f  ,  0.0f,  0.0f, -1.0f, // 7
+         1.f,  1.f, -1.f  ,  0.0f,  0.0f, -1.0f, // 6
+
+        -1.f,  1.f, -1.f  , -1.0f,  0.0f,  0.0f, // 7
+        -1.f, -1.f, -1.f  , -1.0f,  0.0f,  0.0f, // 4
+        -1.f, -1.f,  1.f  , -1.0f,  0.0f,  0.0f, // 0
+        -1.f, -1.f,  1.f  , -1.0f,  0.0f,  0.0f, // 0
+        -1.f,  1.f,  1.f  , -1.0f,  0.0f,  0.0f, // 3
+        -1.f,  1.f, -1.f  , -1.0f,  0.0f,  0.0f, // 7
+
+         1.f, -1.f, -1.f  ,  0.0f, -1.0f,  0.0f, // 5
+         1.f, -1.f,  1.f  ,  0.0f, -1.0f,  0.0f, // 1
+        -1.f, -1.f,  1.f  ,  0.0f, -1.0f,  0.0f, // 0
+        -1.f, -1.f,  1.f  ,  0.0f, -1.0f,  0.0f, // 0
+        -1.f, -1.f, -1.f  ,  0.0f, -1.0f,  0.0f, // 4
+         1.f, -1.f, -1.f  ,  0.0f, -1.0f,  0.0f, // 5
+
+         1.f,  1.f,  1.f  ,  0.0f,  1.0f,  0.0f, // 2
+         1.f,  1.f, -1.f  ,  0.0f,  1.0f,  0.0f, // 6
+        -1.f,  1.f, -1.f  ,  0.0f,  1.0f,  0.0f, // 7
+        -1.f,  1.f, -1.f  ,  0.0f,  1.0f,  0.0f, // 7
+        -1.f,  1.f,  1.f  ,  0.0f,  1.0f,  0.0f, // 3
+         1.f,  1.f,  1.f  ,  0.0f,  1.0f,  0.0f, // 2
+};
 
 static void setup()
 {
     unsigned int texture_shader = compile_shader("res/shader/texture_vertex.glsl", "res/shader/texture_fragment.glsl");
     unsigned int color_shader = compile_shader("res/shader/color_vertex.glsl", "res/shader/color_fragment.glsl");
+    shaded_cube_shader = compile_shader("res/shader/lighting_vertex.glsl", "res/shader/lighting_fragment.glsl");
+
+    {
+        glGenVertexArrays(1, &shaded_cube_vao);
+        glBindVertexArray(shaded_cube_vao);
+
+        unsigned int shaded_cube_vertex_buffer;
+        glGenBuffers(1, &shaded_cube_vertex_buffer);
+        glBindBuffer(GL_ARRAY_BUFFER, shaded_cube_vertex_buffer);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(shaded_cube_verticies), shaded_cube_verticies, GL_STATIC_DRAW);
+
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (void*)0);
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (void*)(sizeof(float) * 3));
+
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+        shaded_cube_u_model        = glGetUniformLocation(shaded_cube_shader, "model");
+        shaded_cube_u_view         = glGetUniformLocation(shaded_cube_shader, "view");
+        shaded_cube_u_projection   = glGetUniformLocation(shaded_cube_shader, "projection");
+        shaded_cube_u_view_pos     = glGetUniformLocation(shaded_cube_shader, "viewPos");
+        shaded_cube_u_light_pos    = glGetUniformLocation(shaded_cube_shader, "lightPos");
+        shaded_cube_u_light_color  = glGetUniformLocation(shaded_cube_shader, "lightColor");
+        shaded_cube_u_object_color = glGetUniformLocation(shaded_cube_shader, "objectColor");
+        
+        glBindVertexArray(0);
+    }
 
     Mesh *cube_mesh = create_cube_mesh();
     Texture *default_tex = create_texture("res/texture/128x128.png", GL_LINEAR, GL_NEAREST, GL_CLAMP_TO_EDGE);
     
     int i;
-    for (i = 0; i < 4; ++i) {
+    for (i = 0; i < 6; ++i) {
         models[i] = create_model(cube_mesh);
         models[i]->shader_program = texture_shader;
     }
@@ -61,15 +136,19 @@ static void setup()
     models[4]->rotation[0] = (float)-GLM_PI_2;
     models[4]->rotation[2] = (float)GLM_PI_2;
     models[4]->scale[1] = 3.f;
+    models[5]->shader_program = color_shader;
+    models[5]->scale[0] = 0.1f;
+    models[5]->scale[1] = 0.1f;
+    models[5]->scale[2] = 0.1f;
 
     crosshair = create_sprite(create_texture("res/texture/crosshair.png", GL_NEAREST, GL_NEAREST, GL_CLAMP_TO_BORDER));
     crosshair->position[0] = width / 2.f;
     crosshair->position[1] = height / 2.f;
 
-    for(int i = 0; i < 5; ++i)
+    for(int i = 0; i < 6; ++i)
         entities[i] = create_entity(models[i], ENTITY_TYPE_MODEL);
     
-    entities[5] = create_entity(crosshair, ENTITY_TYPE_SPRITE);
+    entities[6] = create_entity(crosshair, ENTITY_TYPE_SPRITE);
 
     last_frame = clock();
     glEnable(GL_CULL_FACE);
@@ -78,6 +157,9 @@ static void setup()
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
+    
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
 }
 
 static vec3 camera_position = {0.f, 0.f, 0.f};
@@ -152,6 +234,7 @@ static void mouse_motion(int x, int y)
     camera_rotation[1] = fmodf(camera_rotation[1], (float)GLM_PI * 2);
 }
 
+static float shaded_cube_angle = 0.0f;
 static void display(void)
 {
     clock_t cur_time = clock();
@@ -180,8 +263,35 @@ static void display(void)
     mat4 proj_view;
     glm_mul(proj, view, proj_view);
 
+    {
+        models[5]->position[0] = sinf(shaded_cube_angle) * 2;
+        models[5]->position[1] = 0.0f;
+        models[5]->position[2] = cosf(shaded_cube_angle) * 2 + 6.0f;
+
+        shaded_cube_angle += delta;
+        shaded_cube_angle = fmodf(shaded_cube_angle, GLM_PI * 2);
+
+        glBindVertexArray(shaded_cube_vao);
+        glUseProgram(shaded_cube_shader);
+
+        glUniform3f(shaded_cube_u_object_color, 1.0f, 0.5f, 0.31f);
+        glUniform3f(shaded_cube_u_light_color, 1.0f, 1.0f, 1.0f);
+        glUniform3f(shaded_cube_u_light_pos, models[5]->position[0], models[5]->position[1], models[5]->position[2]);
+        glUniform3fv(shaded_cube_u_view_pos, 1, camera_position);
+
+        mat4 model = GLM_MAT4_IDENTITY_INIT;
+        glm_translate(model, (vec3){ 0.f, 0.0f, 6.0f });
+
+        glUniformMatrix4fv(shaded_cube_u_model, 1, GL_FALSE, model[0]);
+        glUniformMatrix4fv(shaded_cube_u_view, 1, GL_FALSE, view[0]);
+        glUniformMatrix4fv(shaded_cube_u_projection, 1, GL_FALSE, proj[0]);
+
+        glDrawArrays(GL_TRIANGLES, 0, shaded_cube_vertex_count);
+        glBindVertexArray(0);
+    }
+
     int i;
-    for(i = 0; i < 6; ++i)
+    for(i = 0; i < 7; ++i)
         draw_entity(entities[i], proj_view);
 
     glutSwapBuffers();
