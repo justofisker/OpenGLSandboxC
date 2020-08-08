@@ -8,5 +8,5 @@
 	path = thirdparty/freeGLUT
 	url = https://github.com/dcnieho/freeGLUT
 [submodule "thirdparty/stb/include/stb"]
-	path = thirdparty/stb/include/stb
+	path = thirdparty/stb/stb/
 	url = https://github.com/nothings/stb

@@ -4,7 +4,17 @@ project(OpenGlSandboxC VERSION 0.1.0)
 include(CTest)
 enable_testing()
 
-add_executable(OpenGlSandboxC src/main.c src/Model.c src/Mesh.c src/Util.c src/Texture.c src/Sprite.c src/Entity.c src/stb_image.c thirdparty/glad/src/glad.c)
+add_executable(OpenGlSandboxC
+    src/main.c
+    src/Model.c
+    src/Mesh.c
+    src/Util.c
+    src/Texture.c
+    src/Sprite.c
+    src/Entity.c
+    src/stb_image.c
+    thirdparty/glad/src/glad.c
+    )
 
 #add_subdirectory("thirdparty/assimp")
 add_subdirectory("thirdparty/freeGLUT/freeglut/freeglut")
@@ -20,6 +30,6 @@ target_include_directories(OpenGlSandboxC PUBLIC
     "thirdparty/cglm/include"
     "thirdparty/freeGLUT/freeglut/freeglut/include"
     "thirdparty/glad/include"
-    "thirdparty/stb/include"
+    "thirdparty/stb"
     #"thirdparty/assimp/include"
     )
