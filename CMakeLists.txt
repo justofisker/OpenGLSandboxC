@@ -11,6 +11,7 @@ add_executable(OpenGlSandboxC
     src/Util.c
     src/Texture.c
     src/Sprite.c
+    src/Globals.c
     src/stb_image.c
     thirdparty/glad/src/glad.c
     )

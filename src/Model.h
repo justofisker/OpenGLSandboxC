@@ -15,6 +15,6 @@ typedef struct _Model {
 } Model;
 
 Model* create_model(Mesh *mesh);
-void draw_model(Model *entity, mat4 projView);
+void draw_model(Model *entity);
 
 #endif // ENTITY_H

@@ -13,6 +13,7 @@
 #include "Texture.h"
 #include "Sprite.h"
 #include "Util.h"
+#include "Globals.h"
 
 #include <time.h>
 
@@ -93,9 +94,9 @@ static void setup()
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-        shaded_cube_u_model        = glGetUniformLocation(shaded_cube_shader, "model");
-        shaded_cube_u_view         = glGetUniformLocation(shaded_cube_shader, "view");
-        shaded_cube_u_projection   = glGetUniformLocation(shaded_cube_shader, "projection");
+        shaded_cube_u_model        = glGetUniformLocation(shaded_cube_shader, "u_Model");
+        shaded_cube_u_view         = glGetUniformLocation(shaded_cube_shader, "u_View");
+        shaded_cube_u_projection   = glGetUniformLocation(shaded_cube_shader, "u_Projection");
         shaded_cube_u_view_pos     = glGetUniformLocation(shaded_cube_shader, "viewPos");
         shaded_cube_u_light_pos    = glGetUniformLocation(shaded_cube_shader, "lightPos");
         shaded_cube_u_light_color  = glGetUniformLocation(shaded_cube_shader, "lightColor");
@@ -253,8 +254,8 @@ static void display(void)
     glm_perspective(glm_rad(70.f), (float)width / height, 0.01f, 100.f, proj);
     glm_translate_z(view, -5.5f);
 
-    mat4 proj_view;
-    glm_mul(proj, view, proj_view);
+    glm_mat4_copy(view, global_view);
+    glm_mat4_copy(proj, global_projection);
 
     {
         models[5]->position[0] = sinf(shaded_cube_angle) * 4.0f;
@@ -285,7 +286,7 @@ static void display(void)
 
     int i;
     for(i = 0; i < 6; ++i)
-        draw_model(models[i], proj_view);
+        draw_model(models[i]);
     for(i = 0; i < 1; ++i)
         draw_sprite(crosshair);
 

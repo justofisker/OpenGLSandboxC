@@ -7,11 +7,13 @@ layout(location = 2) in vec2 v_TexCoord;
 out vec4 Color;
 out vec2 TexCoord;
 
-uniform mat4 u_MVP;
+uniform mat4 u_Model;
+uniform mat4 u_View;
+uniform mat4 u_Projection;
 
 void main()
 {
-    gl_Position = u_MVP * v_Position;
+    gl_Position = u_Projection * u_View * u_Model * v_Position;
     Color = vec4(v_Color, 1.f);
     TexCoord = v_TexCoord;
 }

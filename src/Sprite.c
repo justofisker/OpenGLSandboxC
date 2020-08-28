@@ -7,7 +7,7 @@
 
 static int initialized = 0;
 static unsigned int vertex_array_object, vertex_buffer, index_buffer, shader_program;
-static unsigned int mvp_loc, texture_loc;
+static unsigned int model_loc, view_loc, projection_loc, texture_loc;
 
 typedef struct Vertex {
     float x, y;
@@ -52,7 +52,9 @@ Sprite* create_sprite(Texture *texture)
 
         shader_program = compile_shader("res/shader/sprite_vertex.glsl", "res/shader/sprite_fragment.glsl");
 
-        mvp_loc = glGetUniformLocation(shader_program, "u_MVP");
+        model_loc = glGetUniformLocation(shader_program, "u_Model");
+        view_loc = glGetUniformLocation(shader_program, "u_View");
+        projection_loc = glGetUniformLocation(shader_program, "u_Projection");
         texture_loc = glGetUniformLocation(shader_program, "u_Texture");
 
         initialized = 1;
@@ -87,10 +89,9 @@ void draw_sprite(Sprite* sprite)
     glm_rotate_z(model, sprite->rotation, model);
     glm_scale(model, (vec3){(float)sprite->texture->width, (float)sprite->texture->height, 0.f});
 
-    mat4 mvp;
-    glm_mat4_mul(proj, model, mvp);
-
-    glUniformMatrix4fv(mvp_loc, 1, GL_FALSE, mvp[0]);
+    glUniformMatrix4fv(model_loc, 1, GL_FALSE, model[0]);
+    glUniformMatrix4fv(view_loc, 1, GL_FALSE, GLM_MAT4_IDENTITY[0]);
+    glUniformMatrix4fv(projection_loc, 1, GL_FALSE, proj[0]);
 
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, NULL);
     
