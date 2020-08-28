@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <glad/glad.h>
 
-const char* get_file_content(const char* path)
+const char* get_file_content(const char *path, long *length)
 {
     FILE* file;
     file = fopen(path, "rb");
@@ -14,6 +14,8 @@ const char* get_file_content(const char* path)
     }
     fseek(file, 0, SEEK_END);
     long fsize = ftell(file);
+    if(length)
+        *length = fsize;
     fseek(file, 0, SEEK_SET);
     char* content = malloc(fsize + 1);
     fread(content, 1, fsize, file);
@@ -22,11 +24,12 @@ const char* get_file_content(const char* path)
     return content;
 }
 
-unsigned int compile_shader(const char* vertex_path, const char* fragment_path)
+unsigned int compile_shader(const char *vertex_path, const char *fragment_path)
 {
-    const char* vertex_source = get_file_content(vertex_path);
+    long vertex_source_length;
+    const char* vertex_source = get_file_content(vertex_path, &vertex_source_length);
     unsigned int vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertex_shader, 1, &vertex_source, NULL);
+    glShaderSource(vertex_shader, 1, &vertex_source, &vertex_source_length);
     glCompileShader(vertex_shader);
     free((void*)vertex_source);
     GLint vertex_compiled;
@@ -38,9 +41,10 @@ unsigned int compile_shader(const char* vertex_path, const char* fragment_path)
         glGetShaderInfoLog(vertex_shader, 1024 - 1, &log_length, message);
         printf("Vertex Shader (%s) failed to compile.\n%s\n", vertex_path, message);
     }
-    const char* fragment_source = get_file_content(fragment_path);
+    long fragment_source_length;
+    const char* fragment_source = get_file_content(fragment_path, &fragment_source_length);
     unsigned int fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragment_shader, 1, &fragment_source, NULL);
+    glShaderSource(fragment_shader, 1, &fragment_source, &fragment_source_length);
     glCompileShader(fragment_shader);
     free((void*)fragment_source);
     GLint fragment_compiled;
