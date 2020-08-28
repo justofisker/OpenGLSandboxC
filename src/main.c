@@ -40,7 +40,7 @@ static void setup()
     int i;
     for (i = 0; i < 6; ++i) {
         models[i] = create_model(cube_mesh);
-        models[i]->shader_program = texture_shader;
+        models[i]->shader_program = lighting_shader;
     }
     models[0]->position[0] = 4.5f;
     models[1]->scale[0] = 2.f;
@@ -52,13 +52,10 @@ static void setup()
     models[3]->scale[1] = 2.f;
     models[3]->scale[2] = 2.f;
     models[3]->rotation[2] = (float)GLM_2_PI;
-    models[4] = create_model(create_cylinder_mesh(32, 1.0f, 1.0f));
+    models[4] = create_model(create_cylinder_mesh(32, 1.0f, 2.0f));
     models[4]->mesh->texture = debug_tex;
-    models[4]->shader_program = texture_shader;
+    models[4]->shader_program = lighting_shader;
     models[4]->position[0] = -4.5f;
-    models[4]->rotation[0] = (float)-GLM_PI_2;
-    models[4]->rotation[2] = (float)GLM_PI_2;
-    models[4]->scale[1] = 3.f;
     models[5]->scale[0] = 0.1f;
     models[5]->scale[1] = 0.1f;
     models[5]->scale[2] = 0.1f;

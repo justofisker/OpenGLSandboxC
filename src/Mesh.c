@@ -88,9 +88,7 @@ Mesh *create_cylinder_mesh(int _verticies, float radius, float depth)
         vec2 uv;
         vec3 normal;
     } Vertex;
-                                                                    // V for top and bottom faces
-                                                                // V for last 2 side verticies
-                                                            // V for top and bottom center vertex
+
     size_t verticies_size = sizeof(Vertex) * (_verticies * (2 + 2) + 6);
     Vertex *verticies = malloc(verticies_size);
 
@@ -106,27 +104,27 @@ Mesh *create_cylinder_mesh(int _verticies, float radius, float depth)
 
         // Sides [0 -> verticies_count * 2 - 1]
         verticies[i].position[0] = x;
-        verticies[i].position[1] = y;
-        verticies[i].position[2] = -.5f * depth;
+        verticies[i].position[1] = -.5f * depth;
+        verticies[i].position[2] = y;
         verticies[i].normal[0] = x_unscaled;
-        verticies[i].normal[1] = y_unscaled;
-        verticies[i].normal[2] = 0;
+        verticies[i].normal[1] = 0.0f;
+        verticies[i].normal[2] = y_unscaled;
         verticies[i].uv[0] = theta / (2 * GLM_PIf);
         verticies[i].uv[1] = 0.f;
 
         verticies[i + verticie_count].position[0] = x;
-        verticies[i + verticie_count].position[1] = y;
-        verticies[i + verticie_count].position[2] = .5f * depth;
+        verticies[i + verticie_count].position[1] = .5f * depth;
+        verticies[i + verticie_count].position[2] = y;
         verticies[i + verticie_count].normal[0] = x_unscaled;
-        verticies[i + verticie_count].normal[1] = y_unscaled;
-        verticies[i + verticie_count].normal[2] = 0;
+        verticies[i + verticie_count].normal[1] = 0.0f;
+        verticies[i + verticie_count].normal[2] = y_unscaled;
         verticies[i + verticie_count].uv[0] = theta / (2 * GLM_PIf);
         verticies[i + verticie_count].uv[1] = 1.f;
 
         // Top / Bottom Faces [verticies_count * 2 -> verticies_count * 4 - 1]
         verticies[i + verticie_count * 2].position[0] = x;
-        verticies[i + verticie_count * 2].position[1] = y;
-        verticies[i + verticie_count * 2].position[2] = -.5f * depth;
+        verticies[i + verticie_count * 2].position[1] = -.5f * depth;
+        verticies[i + verticie_count * 2].position[2] = y;
         verticies[i + verticie_count * 2].uv[0] = x_unscaled * 0.5f + 0.5f;
         verticies[i + verticie_count * 2].uv[1] = y_unscaled * 0.5f + 0.5f;
         verticies[i + verticie_count * 2].normal[0] = 0.0f;
@@ -134,8 +132,8 @@ Mesh *create_cylinder_mesh(int _verticies, float radius, float depth)
         verticies[i + verticie_count * 2].normal[2] = 0.0f;
 
         verticies[i + verticie_count * 3].position[0] = x;
-        verticies[i + verticie_count * 3].position[1] = y;
-        verticies[i + verticie_count * 3].position[2] = .5f * depth;
+        verticies[i + verticie_count * 3].position[1] = .5f * depth;
+        verticies[i + verticie_count * 3].position[2] = y;
         verticies[i + verticie_count * 3].uv[0] = x_unscaled * 0.5f + 0.5f;
         verticies[i + verticie_count * 3].uv[1] = y_unscaled * 0.5f + 0.5f;
         verticies[i + verticie_count * 3].normal[0] = 0.0f;
@@ -147,19 +145,19 @@ Mesh *create_cylinder_mesh(int _verticies, float radius, float depth)
         // Center vertex for Top / Bottom Faces
 
         verticies[verticie_count * 4 + 0].position[0] = 0;
-        verticies[verticie_count * 4 + 0].position[1] = 0;
-        verticies[verticie_count * 4 + 0].position[2] = -0.5f * depth;
+        verticies[verticie_count * 4 + 0].position[1] = -0.5f * depth;
+        verticies[verticie_count * 4 + 0].position[2] = 0;
         verticies[verticie_count * 4 + 0].normal[0] = 0.0f;
-        verticies[verticie_count * 4 + 0].normal[1] = 0.0f;
-        verticies[verticie_count * 4 + 0].normal[2] = -1.0f;
+        verticies[verticie_count * 4 + 0].normal[1] = -1.0f;
+        verticies[verticie_count * 4 + 0].normal[2] = 0.0f;
         verticies[verticie_count * 4 + 0].uv[0] = 0.5f;
         verticies[verticie_count * 4 + 0].uv[1] = 0.5f;
         verticies[verticie_count * 4 + 1].position[0] = 0;
-        verticies[verticie_count * 4 + 1].position[1] = 0;
-        verticies[verticie_count * 4 + 1].position[2] = 0.5f * depth;
+        verticies[verticie_count * 4 + 1].position[1] = 0.5f * depth;
+        verticies[verticie_count * 4 + 1].position[2] = 0;
         verticies[verticie_count * 4 + 1].normal[0] = 0.0f;
-        verticies[verticie_count * 4 + 1].normal[1] = 0.0f;
-        verticies[verticie_count * 4 + 1].normal[2] = 1.0f;
+        verticies[verticie_count * 4 + 1].normal[1] = 1.0f;
+        verticies[verticie_count * 4 + 1].normal[2] = 0.0f;
         verticies[verticie_count * 4 + 1].uv[0] = 0.5f;
         verticies[verticie_count * 4 + 1].uv[1] = 0.5f;
     }
@@ -172,22 +170,22 @@ Mesh *create_cylinder_mesh(int _verticies, float radius, float depth)
     for(i = 0; i < _verticies; ++i)
     {
         int offset = i * 6;
-        indicies[offset + 0] = i + 0;
+        indicies[offset + 0] = i + verticie_count;
         indicies[offset + 1] = i + verticie_count + 1;
-        indicies[offset + 2] = i + verticie_count;
-        indicies[offset + 3] = indicies[offset + 0];
+        indicies[offset + 2] = i + 0;
+        indicies[offset + 3] = indicies[offset + 1];
         indicies[offset + 4] = i + 1;
-        indicies[offset + 5] = indicies[offset + 1];
+        indicies[offset + 5] = indicies[offset + 2];
     }
     for(i = 0; i < _verticies; ++i)
     {
         int offset = 6 * _verticies + i * 6;
-        indicies[offset + 0] = verticie_count * 3 + 0 + i;
+        indicies[offset + 0] = verticie_count * 4 + 1;
         indicies[offset + 1] = verticie_count * 3 + 1 + i;
-        indicies[offset + 2] = verticie_count * 4 + 1;
-        indicies[offset + 3] = verticie_count * 4 + 0;
+        indicies[offset + 2] = verticie_count * 3 + 0 + i;
+        indicies[offset + 3] = verticie_count * 2 + 0 + i;
         indicies[offset + 4] = verticie_count * 2 + 1 + i;
-        indicies[offset + 5] = verticie_count * 2 + 0 + i;
+        indicies[offset + 5] = verticie_count * 4 + 0;
     }
 
     Mesh* mesh = malloc(sizeof(Mesh));
