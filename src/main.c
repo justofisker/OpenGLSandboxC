@@ -128,7 +128,7 @@ static void setup()
     models[1]->mesh->texture = default_tex;
     models[2]->mesh->texture = default_tex;
     models[3]->mesh->texture = default_tex;
-    models[4] = create_model(create_cylinder_mesh(32));
+    models[4] = create_model(create_cylinder_mesh(32, 1.0f, 1.0f));
     models[4]->mesh->texture = default_tex;
     models[4]->shader_program = texture_shader;
     models[4]->position[0] = -4.5f;

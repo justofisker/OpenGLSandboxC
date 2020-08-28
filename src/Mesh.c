@@ -69,81 +69,83 @@ Mesh *create_cube_mesh()
     return mesh;
 }
 
-Mesh *create_cylinder_mesh(unsigned int detail)
+Mesh *create_cylinder_mesh(int _verticies, float radius, float depth)
 {
+    _verticies = max(_verticies, 3);
+
     typedef struct Vertex {
         float x, y, z;
         float r, g, b;
         float tex_x, tex_y;
     } Vertex;
 
-    size_t verticies_size = sizeof(Vertex) * (detail * 2 + 2 + 2);
+    size_t verticies_size = sizeof(Vertex) * (_verticies * 2 + 2 + 2);
     Vertex *verticies = malloc(verticies_size);
 
     int i;
-    for(i = 0; i < detail + 1; ++i)
+    for(i = 0; i < _verticies + 1; ++i)
     {
-        float theta = GLM_PI * 2 / detail * i;
-        float x = cosf(theta);
-        float y = sinf(theta);
+        float theta = GLM_PIf * 2 / _verticies * i;
+        float x = cosf(theta) * radius;
+        float y = sinf(theta) * radius;
 
         verticies[i].x = x;
         verticies[i].y = y;
-        verticies[i].z = -.5f;
+        verticies[i].z = -.5f * depth;
         verticies[i].r = (x + 1) / 2;
         verticies[i].g = (y + 1) / 2;
         verticies[i].b = 0;
-        verticies[i].tex_x = theta / (2 * GLM_PI);
+        verticies[i].tex_x = theta / (2 * GLM_PIf);
         verticies[i].tex_y = 0.f;
-        verticies[i + (detail + 1)].x = x;
-        verticies[i + (detail + 1)].y = y;
-        verticies[i + (detail + 1)].z = .5f;
-        verticies[i + (detail + 1)].r = (x + 1) / 2;
-        verticies[i + (detail + 1)].g = (y + 1) / 2;
-        verticies[i + (detail + 1)].b = 1;
-        verticies[i + (detail + 1)].tex_x = theta / (2 * GLM_PI);
-        verticies[i + (detail + 1)].tex_y = 1.f;
+        verticies[i + (_verticies + 1)].x = x;
+        verticies[i + (_verticies + 1)].y = y;
+        verticies[i + (_verticies + 1)].z = .5f * depth;
+        verticies[i + (_verticies + 1)].r = (x + 1) / 2;
+        verticies[i + (_verticies + 1)].g = (y + 1) / 2;
+        verticies[i + (_verticies + 1)].b = 1;
+        verticies[i + (_verticies + 1)].tex_x = theta / (2 * GLM_PIf);
+        verticies[i + (_verticies + 1)].tex_y = 1.f;
     }
-    verticies[detail * 2 + 2].x = 0;
-    verticies[detail * 2 + 2].y = 0;
-    verticies[detail * 2 + 2].z = -0.5f;
-    verticies[detail * 2 + 2].r = 0;
-    verticies[detail * 2 + 2].g = 0;
-    verticies[detail * 2 + 2].b = 0;
-    verticies[detail * 2 + 2].tex_x = 0.f;
-    verticies[detail * 2 + 2].tex_y = 0.f;
-    verticies[detail * 2 + 3].x = 0;
-    verticies[detail * 2 + 3].y = 0;
-    verticies[detail * 2 + 3].z = 0.5f;
-    verticies[detail * 2 + 3].r = 0;
-    verticies[detail * 2 + 3].g = 0;
-    verticies[detail * 2 + 3].b = 1;
-    verticies[detail * 2 + 3].tex_x = 1.f;
-    verticies[detail * 2 + 3].tex_y = 1.f;
+    verticies[_verticies * 2 + 2].x = 0;
+    verticies[_verticies * 2 + 2].y = 0;
+    verticies[_verticies * 2 + 2].z = -0.5f * depth;
+    verticies[_verticies * 2 + 2].r = 0;
+    verticies[_verticies * 2 + 2].g = 0;
+    verticies[_verticies * 2 + 2].b = 0;
+    verticies[_verticies * 2 + 2].tex_x = 0.f;
+    verticies[_verticies * 2 + 2].tex_y = 0.f;
+    verticies[_verticies * 2 + 3].x = 0;
+    verticies[_verticies * 2 + 3].y = 0;
+    verticies[_verticies * 2 + 3].z = 0.5f * depth;
+    verticies[_verticies * 2 + 3].r = 0;
+    verticies[_verticies * 2 + 3].g = 0;
+    verticies[_verticies * 2 + 3].b = 1;
+    verticies[_verticies * 2 + 3].tex_x = 1.f;
+    verticies[_verticies * 2 + 3].tex_y = 1.f;
 
     typedef unsigned int Index;
 
-    size_t indicies_size = sizeof(Index) * (detail * 12 + 2);
+    size_t indicies_size = sizeof(Index) * (_verticies * 12 + 2);
     Index *indicies = malloc(indicies_size);
 
-    for(i = 0; i < detail; ++i)
+    for(i = 0; i < _verticies; ++i)
     {
         int offset = i * 6;
         indicies[offset + 0] = i + 0;
-        indicies[offset + 1] = i + (detail + 1) + 1;
-        indicies[offset + 2] = i + (detail + 1);
+        indicies[offset + 1] = i + (_verticies + 1) + 1;
+        indicies[offset + 2] = i + (_verticies + 1);
         indicies[offset + 3] = indicies[offset + 0];
         indicies[offset + 4] = i + 1;
         indicies[offset + 5] = indicies[offset + 1];
     }
-    for(i = 0; i < detail; ++i)
+    for(i = 0; i < _verticies; ++i)
     {
-        indicies[(detail + i) * 6 + 0] = (detail + 1) + i;
-        indicies[(detail + i) * 6 + 1] = (detail + 1) + 1 + i;
-        indicies[(detail + i) * 6 + 2] = (detail + 1) * 2 + 1;
-        indicies[(detail + i) * 6 + 3] = i;
-        indicies[(detail + i) * 6 + 4] = 1 + i;
-        indicies[(detail + i) * 6 + 5] = (detail + 1) * 2;
+        indicies[(_verticies + i) * 6 + 0] = (_verticies + 1) + i;
+        indicies[(_verticies + i) * 6 + 1] = (_verticies + 1) + 1 + i;
+        indicies[(_verticies + i) * 6 + 2] = (_verticies + 1) * 2 + 1;
+        indicies[(_verticies + i) * 6 + 3] = (_verticies + 1) * 2;
+        indicies[(_verticies + i) * 6 + 4] = 1 + i;
+        indicies[(_verticies + i) * 6 + 5] = i;
     }
 
     Mesh* mesh = malloc(sizeof(Mesh));
@@ -166,7 +168,7 @@ Mesh *create_cylinder_mesh(unsigned int detail)
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->index_buffer);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicies_size, indicies, GL_STATIC_DRAW);
 
-    mesh->index_count = detail * 12;
+    mesh->index_count = _verticies * 12;
     mesh->index_type = GL_UNSIGNED_INT;
 
     mesh->texture = NULL;

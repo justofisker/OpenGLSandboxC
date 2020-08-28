@@ -15,7 +15,7 @@ typedef struct _Mesh {
 } Mesh;
 
 Mesh* create_cube_mesh();
-Mesh* create_cylinder_mesh(unsigned int detail);
+Mesh* create_cylinder_mesh(int verticies, float radius, float depth);
 void free_mesh(Mesh *mesh);
 
 #endif // MESH_H
