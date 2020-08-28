@@ -105,7 +105,7 @@ static void setup()
         glBindVertexArray(0);
     }
 
-    Mesh *cube_mesh = create_cube_mesh();
+    Mesh *cube_mesh = create_cube_mesh(2.0f);
     Texture *default_tex = create_texture("res/texture/128x128.png", GL_LINEAR, GL_NEAREST, GL_CLAMP_TO_EDGE);
     
     int i;

@@ -4,7 +4,7 @@
 #include <glad/glad.h>
 #include <cglm/cglm.h>
 
-Mesh *create_cube_mesh()
+Mesh *create_cube_mesh(float size)
 {
     typedef struct vertex
     {
@@ -13,15 +13,15 @@ Mesh *create_cube_mesh()
         float tex_x, tex_y;
     } Vertex;
 
-    static Vertex verticies[] = {
-        { -1.f, -1.f,  1.f  ,  0.f, 0.f, 1.f  ,  0.f, 0.f },
-        {  1.f, -1.f,  1.f  ,  1.f, 0.f, 1.f  ,  1.f, 0.f },
-        {  1.f,  1.f,  1.f  ,  1.f, 1.f, 1.f  ,  1.f, 1.f },
-        { -1.f,  1.f,  1.f  ,  0.f, 1.f, 1.f  ,  0.f, 1.f },
-        { -1.f, -1.f, -1.f  ,  0.f, 0.f, 0.f  ,  0.f, 1.f },
-        {  1.f, -1.f, -1.f  ,  1.f, 0.f, 0.f  ,  1.f, 1.f },
-        {  1.f,  1.f, -1.f  ,  1.f, 1.f, 0.f  ,  1.f, 0.f },
-        { -1.f,  1.f, -1.f  ,  0.f, 1.f, 0.f  ,  0.f, 0.f },
+    Vertex verticies[] = {
+        { -0.5f * size, -0.5f * size,  0.5f * size  ,  0.f, 0.f, 1.f  ,  0.f, 0.f },
+        {  0.5f * size, -0.5f * size,  0.5f * size  ,  1.f, 0.f, 1.f  ,  1.f, 0.f },
+        {  0.5f * size,  0.5f * size,  0.5f * size  ,  1.f, 1.f, 1.f  ,  1.f, 1.f },
+        { -0.5f * size,  0.5f * size,  0.5f * size  ,  0.f, 1.f, 1.f  ,  0.f, 1.f },
+        { -0.5f * size, -0.5f * size, -0.5f * size  ,  0.f, 0.f, 0.f  ,  0.f, 1.f },
+        {  0.5f * size, -0.5f * size, -0.5f * size  ,  1.f, 0.f, 0.f  ,  1.f, 1.f },
+        {  0.5f * size,  0.5f * size, -0.5f * size  ,  1.f, 1.f, 0.f  ,  1.f, 0.f },
+        { -0.5f * size,  0.5f * size, -0.5f * size  ,  0.f, 1.f, 0.f  ,  0.f, 0.f },
     };
 
     typedef unsigned char Index;

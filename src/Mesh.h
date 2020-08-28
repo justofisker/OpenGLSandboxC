@@ -14,7 +14,7 @@ typedef struct _Mesh {
     GLenum index_type;
 } Mesh;
 
-Mesh* create_cube_mesh();
+Mesh* create_cube_mesh(float size);
 Mesh* create_cylinder_mesh(int verticies, float radius, float depth);
 void free_mesh(Mesh *mesh);
 
