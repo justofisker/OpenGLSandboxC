@@ -4,8 +4,6 @@
 #include <glad/glad.h>
 #include <cglm/cglm.h>
 
-#include <string.h>
-
 Mesh *create_cube_mesh()
 {
     typedef struct vertex
@@ -127,7 +125,6 @@ Mesh *create_cylinder_mesh(unsigned int detail)
 
     size_t indicies_size = sizeof(Index) * (detail * 12 + 2);
     Index *indicies = malloc(indicies_size);
-    memset(indicies, 0, indicies_size); // REMOVE STRING.H
 
     for(i = 0; i < detail; ++i)
     {
