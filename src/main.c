@@ -56,9 +56,9 @@ static void setup()
     models[4]->mesh->texture = debug_tex;
     models[4]->shader_program = lighting_shader;
     models[4]->position[0] = -4.5f;
-    models[5]->scale[0] = 0.1f;
-    models[5]->scale[1] = 0.1f;
-    models[5]->scale[2] = 0.1f;
+    models[5] = create_model(create_cube_mesh(0.2f));
+    models[5]->mesh->texture = create_texture_color(255, 255, 0, 255);
+    models[5]->shader_program = texture_shader;
     models[6] = create_model(create_cube_mesh(1.0f));
     models[6]->mesh->texture = debug_tex;
     models[6]->shader_program = lighting_shader;
