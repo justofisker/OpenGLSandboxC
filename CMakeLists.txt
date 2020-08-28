@@ -5,15 +5,15 @@ include(CTest)
 enable_testing()
 
 add_executable(OpenGlSandboxC
-    src/main.c
-    src/Model.c
-    src/Mesh.c
-    src/Util.c
-    src/Texture.c
-    src/Sprite.c
-    src/Globals.c
-    src/stb_image.c
-    thirdparty/glad/src/glad.c
+    "src/main.c"
+    "src/Model.c"
+    "src/Mesh.c"
+    "src/Util.c"
+    "src/Texture.c"
+    "src/Sprite.c"
+    "src/Globals.c"
+    "src/stb_image.c"
+    "thirdparty/glad/src/glad.c"
     )
 
 #add_subdirectory("thirdparty/assimp")

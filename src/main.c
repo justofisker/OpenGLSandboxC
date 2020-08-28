@@ -21,93 +21,22 @@
 
 static int width = 1920, height = 1080;
 
-Model *models[6];
+Model *models[7];
 Sprite *crosshair;
 clock_t last_frame;
-
-unsigned int shaded_cube_vao, shaded_cube_shader, shaded_cube_vertex_count = 36;
-unsigned int shaded_cube_u_model, shaded_cube_u_view, shaded_cube_u_projection, shaded_cube_u_view_pos, shaded_cube_u_light_pos, shaded_cube_u_light_color, shaded_cube_u_object_color;
-
-float shaded_cube_verticies[] = {
-        -1.f, -1.f,  1.f  ,  0.0f,  0.0f, 1.0f, // 0
-         1.f, -1.f,  1.f  ,  0.0f,  0.0f, 1.0f, // 1
-         1.f,  1.f,  1.f  ,  0.0f,  0.0f, 1.0f, // 2
-         1.f,  1.f,  1.f  ,  0.0f,  0.0f, 1.0f, // 2
-        -1.f,  1.f,  1.f  ,  0.0f,  0.0f, 1.0f, // 3
-        -1.f, -1.f,  1.f  ,  0.0f,  0.0f, 1.0f, // 0
-
-         1.f, -1.f,  1.f  ,  1.0f,  0.0f,  0.0f, // 1
-         1.f, -1.f, -1.f  ,  1.0f,  0.0f,  0.0f, // 5
-         1.f,  1.f, -1.f  ,  1.0f,  0.0f,  0.0f, // 6
-         1.f,  1.f, -1.f  ,  1.0f,  0.0f,  0.0f, // 6
-         1.f,  1.f,  1.f  ,  1.0f,  0.0f,  0.0f, // 2
-         1.f, -1.f,  1.f  ,  1.0f,  0.0f,  0.0f, // 1
-
-         1.f,  1.f, -1.f  ,  0.0f,  0.0f, -1.0f, // 6
-         1.f, -1.f, -1.f  ,  0.0f,  0.0f, -1.0f, // 5
-        -1.f, -1.f, -1.f  ,  0.0f,  0.0f, -1.0f, // 4
-        -1.f, -1.f, -1.f  ,  0.0f,  0.0f, -1.0f, // 4
-        -1.f,  1.f, -1.f  ,  0.0f,  0.0f, -1.0f, // 7
-         1.f,  1.f, -1.f  ,  0.0f,  0.0f, -1.0f, // 6
-
-        -1.f,  1.f, -1.f  , -1.0f,  0.0f,  0.0f, // 7
-        -1.f, -1.f, -1.f  , -1.0f,  0.0f,  0.0f, // 4
-        -1.f, -1.f,  1.f  , -1.0f,  0.0f,  0.0f, // 0
-        -1.f, -1.f,  1.f  , -1.0f,  0.0f,  0.0f, // 0
-        -1.f,  1.f,  1.f  , -1.0f,  0.0f,  0.0f, // 3
-        -1.f,  1.f, -1.f  , -1.0f,  0.0f,  0.0f, // 7
-
-         1.f, -1.f, -1.f  ,  0.0f, -1.0f,  0.0f, // 5
-         1.f, -1.f,  1.f  ,  0.0f, -1.0f,  0.0f, // 1
-        -1.f, -1.f,  1.f  ,  0.0f, -1.0f,  0.0f, // 0
-        -1.f, -1.f,  1.f  ,  0.0f, -1.0f,  0.0f, // 0
-        -1.f, -1.f, -1.f  ,  0.0f, -1.0f,  0.0f, // 4
-         1.f, -1.f, -1.f  ,  0.0f, -1.0f,  0.0f, // 5
-
-         1.f,  1.f,  1.f  ,  0.0f,  1.0f,  0.0f, // 2
-         1.f,  1.f, -1.f  ,  0.0f,  1.0f,  0.0f, // 6
-        -1.f,  1.f, -1.f  ,  0.0f,  1.0f,  0.0f, // 7
-        -1.f,  1.f, -1.f  ,  0.0f,  1.0f,  0.0f, // 7
-        -1.f,  1.f,  1.f  ,  0.0f,  1.0f,  0.0f, // 3
-         1.f,  1.f,  1.f  ,  0.0f,  1.0f,  0.0f, // 2
-};
 
 static void setup()
 {
     unsigned int texture_shader = compile_shader("res/shader/texture_vertex.glsl", "res/shader/texture_fragment.glsl");
-    unsigned int color_shader = compile_shader("res/shader/color_vertex.glsl", "res/shader/color_fragment.glsl");
-    shaded_cube_shader = compile_shader("res/shader/lighting_vertex.glsl", "res/shader/lighting_fragment.glsl");
+    unsigned int lighting_shader = compile_shader("res/shader/lighting_vertex.glsl", "res/shader/lighting_fragment.glsl");
 
-    {
-        glGenVertexArrays(1, &shaded_cube_vao);
-        glBindVertexArray(shaded_cube_vao);
-
-        unsigned int shaded_cube_vertex_buffer;
-        glGenBuffers(1, &shaded_cube_vertex_buffer);
-        glBindBuffer(GL_ARRAY_BUFFER, shaded_cube_vertex_buffer);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(shaded_cube_verticies), shaded_cube_verticies, GL_STATIC_DRAW);
-
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (void*)0);
-        glEnableVertexAttribArray(1);
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (void*)(sizeof(float) * 3));
-
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-        shaded_cube_u_model        = glGetUniformLocation(shaded_cube_shader, "u_Model");
-        shaded_cube_u_view         = glGetUniformLocation(shaded_cube_shader, "u_View");
-        shaded_cube_u_projection   = glGetUniformLocation(shaded_cube_shader, "u_Projection");
-        shaded_cube_u_view_pos     = glGetUniformLocation(shaded_cube_shader, "viewPos");
-        shaded_cube_u_light_pos    = glGetUniformLocation(shaded_cube_shader, "lightPos");
-        shaded_cube_u_light_color  = glGetUniformLocation(shaded_cube_shader, "lightColor");
-        shaded_cube_u_object_color = glGetUniformLocation(shaded_cube_shader, "objectColor");
-        
-        glBindVertexArray(0);
-    }
+    Texture *default_tex = create_texture("res/texture/128x128.png", GL_LINEAR, GL_NEAREST, GL_NEAREST);
+    Texture *debug_tex = create_texture("res/texture/debug.png", GL_LINEAR, GL_NEAREST, GL_NEAREST);
+    
 
     Mesh *cube_mesh = create_cube_mesh(2.0f);
-    Texture *default_tex = create_texture("res/texture/128x128.png", GL_LINEAR, GL_NEAREST, GL_CLAMP_TO_EDGE);
-    
+    cube_mesh->texture = default_tex;
+
     int i;
     for (i = 0; i < 6; ++i) {
         models[i] = create_model(cube_mesh);
@@ -118,27 +47,25 @@ static void setup()
     models[2]->position[1] = -4.f;
     models[2]->scale[0] = 3.f;
     models[2]->rotation[1] = (float)GLM_PI;
-    models[3]->shader_program = color_shader;
     models[3]->position[2] = -5.f;
     models[3]->scale[0] = 2.f;
     models[3]->scale[1] = 2.f;
     models[3]->scale[2] = 2.f;
     models[3]->rotation[2] = (float)GLM_2_PI;
-    models[0]->mesh->texture = default_tex;
-    models[1]->mesh->texture = default_tex;
-    models[2]->mesh->texture = default_tex;
-    models[3]->mesh->texture = default_tex;
     models[4] = create_model(create_cylinder_mesh(32, 1.0f, 1.0f));
-    models[4]->mesh->texture = default_tex;
+    models[4]->mesh->texture = debug_tex;
     models[4]->shader_program = texture_shader;
     models[4]->position[0] = -4.5f;
     models[4]->rotation[0] = (float)-GLM_PI_2;
     models[4]->rotation[2] = (float)GLM_PI_2;
     models[4]->scale[1] = 3.f;
-    models[5]->shader_program = color_shader;
     models[5]->scale[0] = 0.1f;
     models[5]->scale[1] = 0.1f;
     models[5]->scale[2] = 0.1f;
+    models[6] = create_model(create_cube_mesh(1.0f));
+    models[6]->mesh->texture = debug_tex;
+    models[6]->shader_program = lighting_shader;
+    models[6]->position[2] = 6.0f;
 
     crosshair = create_sprite(create_texture("res/texture/crosshair.png", GL_NEAREST, GL_NEAREST, GL_CLAMP_TO_BORDER));
     crosshair->position[0] = width / 2.f;
@@ -256,36 +183,19 @@ static void display(void)
 
     glm_mat4_copy(view, global_view);
     glm_mat4_copy(proj, global_projection);
+    glm_vec3_copy(camera_position, global_view_pos);
+    glm_vec3_copy((vec3){0.7f,0.7f,0.7f}, global_light_color);
+    glm_vec3_copy(models[5]->position, global_light_pos);
 
-    {
-        models[5]->position[0] = sinf(shaded_cube_angle) * 4.0f;
-        models[5]->position[1] = 3.0f;
-        models[5]->position[2] = cosf(shaded_cube_angle) * 4.0f + 6.0f;
+    models[5]->position[0] = sinf(shaded_cube_angle) * 4.0f;
+    models[5]->position[1] = 3.0f;
+    models[5]->position[2] = cosf(shaded_cube_angle) * 4.0f + 6.0f;
+    shaded_cube_angle += delta;
+    shaded_cube_angle = fmodf(shaded_cube_angle, GLM_PIf * 2.0f);
 
-        shaded_cube_angle += delta;
-        shaded_cube_angle = fmodf(shaded_cube_angle, GLM_PI * 2);
-
-        glBindVertexArray(shaded_cube_vao);
-        glUseProgram(shaded_cube_shader);
-
-        glUniform3f(shaded_cube_u_object_color, 1.0f, 0.5f, 0.31f);
-        glUniform3f(shaded_cube_u_light_color, 1.0f, 1.0f, 1.0f);
-        glUniform3f(shaded_cube_u_light_pos, models[5]->position[0], models[5]->position[1], models[5]->position[2]);
-        glUniform3fv(shaded_cube_u_view_pos, 1, camera_position);
-
-        mat4 model = GLM_MAT4_IDENTITY_INIT;
-        glm_translate(model, (vec3){ 0.f, 0.0f, 6.0f });
-
-        glUniformMatrix4fv(shaded_cube_u_model, 1, GL_FALSE, model[0]);
-        glUniformMatrix4fv(shaded_cube_u_view, 1, GL_FALSE, view[0]);
-        glUniformMatrix4fv(shaded_cube_u_projection, 1, GL_FALSE, proj[0]);
-
-        glDrawArrays(GL_TRIANGLES, 0, shaded_cube_vertex_count);
-        glBindVertexArray(0);
-    }
 
     int i;
-    for(i = 0; i < 6; ++i)
+    for(i = 0; i < 7; ++i)
         draw_model(models[i]);
     for(i = 0; i < 1; ++i)
         draw_sprite(crosshair);

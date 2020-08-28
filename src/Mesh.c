@@ -8,37 +8,47 @@ Mesh *create_cube_mesh(float size)
 {
     typedef struct vertex
     {
-        float x, y, z;
-        float r, g, b;
-        float tex_x, tex_y;
+        vec3 position;
+        vec2 uv;
+        vec3 normal;
     } Vertex;
 
     Vertex verticies[] = {
-        { -0.5f * size, -0.5f * size,  0.5f * size  ,  0.f, 0.f, 1.f  ,  0.f, 0.f },
-        {  0.5f * size, -0.5f * size,  0.5f * size  ,  1.f, 0.f, 1.f  ,  1.f, 0.f },
-        {  0.5f * size,  0.5f * size,  0.5f * size  ,  1.f, 1.f, 1.f  ,  1.f, 1.f },
-        { -0.5f * size,  0.5f * size,  0.5f * size  ,  0.f, 1.f, 1.f  ,  0.f, 1.f },
-        { -0.5f * size, -0.5f * size, -0.5f * size  ,  0.f, 0.f, 0.f  ,  0.f, 1.f },
-        {  0.5f * size, -0.5f * size, -0.5f * size  ,  1.f, 0.f, 0.f  ,  1.f, 1.f },
-        {  0.5f * size,  0.5f * size, -0.5f * size  ,  1.f, 1.f, 0.f  ,  1.f, 0.f },
-        { -0.5f * size,  0.5f * size, -0.5f * size  ,  0.f, 1.f, 0.f  ,  0.f, 0.f },
+        {-0.5f * size, -0.5f * size,  0.5f * size  ,  0.0f, 0.0f  ,  0.0f,  0.0f,  1.0f},
+        { 0.5f * size, -0.5f * size,  0.5f * size  ,  1.0f, 0.0f  ,  0.0f,  0.0f,  1.0f},
+        { 0.5f * size,  0.5f * size,  0.5f * size  ,  1.0f, 1.0f  ,  0.0f,  0.0f,  1.0f},
+        {-0.5f * size,  0.5f * size,  0.5f * size  ,  0.0f, 1.0f  ,  0.0f,  0.0f,  1.0f},
+        { 0.5f * size, -0.5f * size,  0.5f * size  ,  0.0f, 0.0f  ,  1.0f,  0.0f,  0.0f},
+        { 0.5f * size, -0.5f * size, -0.5f * size  ,  1.0f, 0.0f  ,  1.0f,  0.0f,  0.0f},
+        { 0.5f * size,  0.5f * size, -0.5f * size  ,  1.0f, 1.0f  ,  1.0f,  0.0f,  0.0f},
+        { 0.5f * size,  0.5f * size,  0.5f * size  ,  0.0f, 1.0f  ,  1.0f,  0.0f,  0.0f},
+        { 0.5f * size,  0.5f * size, -0.5f * size  ,  0.0f, 0.0f  ,  0.0f,  0.0f, -1.0f},
+        { 0.5f * size, -0.5f * size, -0.5f * size  ,  1.0f, 0.0f  ,  0.0f,  0.0f, -1.0f},
+        {-0.5f * size, -0.5f * size, -0.5f * size  ,  1.0f, 1.0f  ,  0.0f,  0.0f, -1.0f},
+        {-0.5f * size,  0.5f * size, -0.5f * size  ,  0.0f, 1.0f  ,  0.0f,  0.0f, -1.0f},
+        {-0.5f * size,  0.5f * size, -0.5f * size  ,  0.0f, 0.0f  , -1.0f,  0.0f,  0.0f},
+        {-0.5f * size, -0.5f * size, -0.5f * size  ,  1.0f, 0.0f  , -1.0f,  0.0f,  0.0f},
+        {-0.5f * size, -0.5f * size,  0.5f * size  ,  1.0f, 1.0f  , -1.0f,  0.0f,  0.0f},
+        {-0.5f * size,  0.5f * size,  0.5f * size  ,  0.0f, 1.0f  , -1.0f,  0.0f,  0.0f},
+        { 0.5f * size, -0.5f * size, -0.5f * size  ,  0.0f, 0.0f  ,  0.0f, -1.0f,  0.0f},
+        { 0.5f * size, -0.5f * size,  0.5f * size  ,  1.0f, 0.0f  ,  0.0f, -1.0f,  0.0f},
+        {-0.5f * size, -0.5f * size,  0.5f * size  ,  1.0f, 1.0f  ,  0.0f, -1.0f,  0.0f},
+        {-0.5f * size, -0.5f * size, -0.5f * size  ,  0.0f, 1.0f  ,  0.0f, -1.0f,  0.0f},
+        { 0.5f * size,  0.5f * size,  0.5f * size  ,  0.0f, 0.0f  ,  0.0f,  1.0f,  0.0f},
+        { 0.5f * size,  0.5f * size, -0.5f * size  ,  1.0f, 0.0f  ,  0.0f,  1.0f,  0.0f},
+        {-0.5f * size,  0.5f * size, -0.5f * size  ,  1.0f, 1.0f  ,  0.0f,  1.0f,  0.0f},
+        {-0.5f * size,  0.5f * size,  0.5f * size  ,  0.0f, 1.0f  ,  0.0f,  1.0f,  0.0f},
     };
 
     typedef unsigned char Index;
 
     static Index indicies[] = {
-        0, 1, 2,
-        2, 3, 0,
-        1, 5, 6,
-        6, 2, 1,
-        6, 5, 4,
-        4, 7, 6,
-        7, 4, 0,
-        0, 3, 7,
-        5, 1, 0,
-        0, 4, 5,
-        2, 6, 7,
-        7, 3, 2,
+        0 + 4 * 0, 1 + 4 * 0, 2 + 4 * 0, 2 + 4 * 0, 3 + 4 * 0, 0 + 4 * 0,
+        0 + 4 * 1, 1 + 4 * 1, 2 + 4 * 1, 2 + 4 * 1, 3 + 4 * 1, 0 + 4 * 1,
+        0 + 4 * 2, 1 + 4 * 2, 2 + 4 * 2, 2 + 4 * 2, 3 + 4 * 2, 0 + 4 * 2,
+        0 + 4 * 3, 1 + 4 * 3, 2 + 4 * 3, 2 + 4 * 3, 3 + 4 * 3, 0 + 4 * 3,
+        0 + 4 * 4, 1 + 4 * 4, 2 + 4 * 4, 2 + 4 * 4, 3 + 4 * 4, 0 + 4 * 4,
+        0 + 4 * 5, 1 + 4 * 5, 2 + 4 * 5, 2 + 4 * 5, 3 + 4 * 5, 0 + 4 * 5,
     };
 
     Mesh *mesh = malloc(sizeof(Mesh));
@@ -51,11 +61,11 @@ Mesh *create_cube_mesh(float size)
     glBufferData(GL_ARRAY_BUFFER, sizeof(verticies), verticies, GL_STATIC_DRAW);
 
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, x));
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position));
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, r));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, uv));
     glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, tex_x));
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
 
     glGenBuffers(1, &mesh->index_buffer);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->index_buffer);
@@ -74,78 +84,110 @@ Mesh *create_cylinder_mesh(int _verticies, float radius, float depth)
     _verticies = max(_verticies, 3);
 
     typedef struct Vertex {
-        float x, y, z;
-        float r, g, b;
-        float tex_x, tex_y;
+        vec3 position;
+        vec2 uv;
+        vec3 normal;
     } Vertex;
-
-    size_t verticies_size = sizeof(Vertex) * (_verticies * 2 + 2 + 2);
+                                                                    // V for top and bottom faces
+                                                                // V for last 2 side verticies
+                                                            // V for top and bottom center vertex
+    size_t verticies_size = sizeof(Vertex) * (_verticies * (2 + 2) + 6);
     Vertex *verticies = malloc(verticies_size);
 
+    int verticie_count = _verticies + 1;
     int i;
     for(i = 0; i < _verticies + 1; ++i)
     {
         float theta = GLM_PIf * 2 / _verticies * i;
-        float x = cosf(theta) * radius;
-        float y = sinf(theta) * radius;
+        float x_unscaled = cosf(theta);
+        float y_unscaled = sinf(theta);
+        float x = x_unscaled * radius;
+        float y = y_unscaled * radius;
 
-        verticies[i].x = x;
-        verticies[i].y = y;
-        verticies[i].z = -.5f * depth;
-        verticies[i].r = (x + 1) / 2;
-        verticies[i].g = (y + 1) / 2;
-        verticies[i].b = 0;
-        verticies[i].tex_x = theta / (2 * GLM_PIf);
-        verticies[i].tex_y = 0.f;
-        verticies[i + (_verticies + 1)].x = x;
-        verticies[i + (_verticies + 1)].y = y;
-        verticies[i + (_verticies + 1)].z = .5f * depth;
-        verticies[i + (_verticies + 1)].r = (x + 1) / 2;
-        verticies[i + (_verticies + 1)].g = (y + 1) / 2;
-        verticies[i + (_verticies + 1)].b = 1;
-        verticies[i + (_verticies + 1)].tex_x = theta / (2 * GLM_PIf);
-        verticies[i + (_verticies + 1)].tex_y = 1.f;
+        // Sides [0 -> verticies_count * 2 - 1]
+        verticies[i].position[0] = x;
+        verticies[i].position[1] = y;
+        verticies[i].position[2] = -.5f * depth;
+        verticies[i].normal[0] = x_unscaled;
+        verticies[i].normal[1] = y_unscaled;
+        verticies[i].normal[2] = 0;
+        verticies[i].uv[0] = theta / (2 * GLM_PIf);
+        verticies[i].uv[1] = 0.f;
+
+        verticies[i + verticie_count].position[0] = x;
+        verticies[i + verticie_count].position[1] = y;
+        verticies[i + verticie_count].position[2] = .5f * depth;
+        verticies[i + verticie_count].normal[0] = x_unscaled;
+        verticies[i + verticie_count].normal[1] = y_unscaled;
+        verticies[i + verticie_count].normal[2] = 0;
+        verticies[i + verticie_count].uv[0] = theta / (2 * GLM_PIf);
+        verticies[i + verticie_count].uv[1] = 1.f;
+
+        // Top / Bottom Faces [verticies_count * 2 -> verticies_count * 4 - 1]
+        verticies[i + verticie_count * 2].position[0] = x;
+        verticies[i + verticie_count * 2].position[1] = y;
+        verticies[i + verticie_count * 2].position[2] = -.5f * depth;
+        verticies[i + verticie_count * 2].uv[0] = x_unscaled * 0.5f + 0.5f;
+        verticies[i + verticie_count * 2].uv[1] = y_unscaled * 0.5f + 0.5f;
+        verticies[i + verticie_count * 2].normal[0] = 0.0f;
+        verticies[i + verticie_count * 2].normal[1] = -1.0f;
+        verticies[i + verticie_count * 2].normal[2] = 0.0f;
+
+        verticies[i + verticie_count * 3].position[0] = x;
+        verticies[i + verticie_count * 3].position[1] = y;
+        verticies[i + verticie_count * 3].position[2] = .5f * depth;
+        verticies[i + verticie_count * 3].uv[0] = x_unscaled * 0.5f + 0.5f;
+        verticies[i + verticie_count * 3].uv[1] = y_unscaled * 0.5f + 0.5f;
+        verticies[i + verticie_count * 3].normal[0] = 0.0f;
+        verticies[i + verticie_count * 3].normal[1] = 1.0f;
+        verticies[i + verticie_count * 3].normal[2] = 0.0f;
+
     }
-    verticies[_verticies * 2 + 2].x = 0;
-    verticies[_verticies * 2 + 2].y = 0;
-    verticies[_verticies * 2 + 2].z = -0.5f * depth;
-    verticies[_verticies * 2 + 2].r = 0;
-    verticies[_verticies * 2 + 2].g = 0;
-    verticies[_verticies * 2 + 2].b = 0;
-    verticies[_verticies * 2 + 2].tex_x = 0.f;
-    verticies[_verticies * 2 + 2].tex_y = 0.f;
-    verticies[_verticies * 2 + 3].x = 0;
-    verticies[_verticies * 2 + 3].y = 0;
-    verticies[_verticies * 2 + 3].z = 0.5f * depth;
-    verticies[_verticies * 2 + 3].r = 0;
-    verticies[_verticies * 2 + 3].g = 0;
-    verticies[_verticies * 2 + 3].b = 1;
-    verticies[_verticies * 2 + 3].tex_x = 1.f;
-    verticies[_verticies * 2 + 3].tex_y = 1.f;
+    {
+        // Center vertex for Top / Bottom Faces
+
+        verticies[verticie_count * 4 + 0].position[0] = 0;
+        verticies[verticie_count * 4 + 0].position[1] = 0;
+        verticies[verticie_count * 4 + 0].position[2] = -0.5f * depth;
+        verticies[verticie_count * 4 + 0].normal[0] = 0.0f;
+        verticies[verticie_count * 4 + 0].normal[1] = 0.0f;
+        verticies[verticie_count * 4 + 0].normal[2] = -1.0f;
+        verticies[verticie_count * 4 + 0].uv[0] = 0.5f;
+        verticies[verticie_count * 4 + 0].uv[1] = 0.5f;
+        verticies[verticie_count * 4 + 1].position[0] = 0;
+        verticies[verticie_count * 4 + 1].position[1] = 0;
+        verticies[verticie_count * 4 + 1].position[2] = 0.5f * depth;
+        verticies[verticie_count * 4 + 1].normal[0] = 0.0f;
+        verticies[verticie_count * 4 + 1].normal[1] = 0.0f;
+        verticies[verticie_count * 4 + 1].normal[2] = 1.0f;
+        verticies[verticie_count * 4 + 1].uv[0] = 0.5f;
+        verticies[verticie_count * 4 + 1].uv[1] = 0.5f;
+    }
 
     typedef unsigned int Index;
 
-    size_t indicies_size = sizeof(Index) * (_verticies * 12 + 2);
+    size_t indicies_size = sizeof(Index) * (_verticies * (6 + 6) + 2);
     Index *indicies = malloc(indicies_size);
 
     for(i = 0; i < _verticies; ++i)
     {
         int offset = i * 6;
         indicies[offset + 0] = i + 0;
-        indicies[offset + 1] = i + (_verticies + 1) + 1;
-        indicies[offset + 2] = i + (_verticies + 1);
+        indicies[offset + 1] = i + verticie_count + 1;
+        indicies[offset + 2] = i + verticie_count;
         indicies[offset + 3] = indicies[offset + 0];
         indicies[offset + 4] = i + 1;
         indicies[offset + 5] = indicies[offset + 1];
     }
     for(i = 0; i < _verticies; ++i)
     {
-        indicies[(_verticies + i) * 6 + 0] = (_verticies + 1) + i;
-        indicies[(_verticies + i) * 6 + 1] = (_verticies + 1) + 1 + i;
-        indicies[(_verticies + i) * 6 + 2] = (_verticies + 1) * 2 + 1;
-        indicies[(_verticies + i) * 6 + 3] = (_verticies + 1) * 2;
-        indicies[(_verticies + i) * 6 + 4] = 1 + i;
-        indicies[(_verticies + i) * 6 + 5] = i;
+        int offset = 6 * _verticies + i * 6;
+        indicies[offset + 0] = verticie_count * 3 + 0 + i;
+        indicies[offset + 1] = verticie_count * 3 + 1 + i;
+        indicies[offset + 2] = verticie_count * 4 + 1;
+        indicies[offset + 3] = verticie_count * 4 + 0;
+        indicies[offset + 4] = verticie_count * 2 + 1 + i;
+        indicies[offset + 5] = verticie_count * 2 + 0 + i;
     }
 
     Mesh* mesh = malloc(sizeof(Mesh));
@@ -158,11 +200,11 @@ Mesh *create_cylinder_mesh(int _verticies, float radius, float depth)
     glBufferData(GL_ARRAY_BUFFER, verticies_size, verticies, GL_STATIC_DRAW);
 
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, x));
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position));
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, r));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, uv));
     glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, tex_x));
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
 
     glGenBuffers(1, &mesh->index_buffer);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->index_buffer);
