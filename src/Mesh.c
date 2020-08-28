@@ -4,6 +4,8 @@
 #include <glad/glad.h>
 #include <cglm/cglm.h>
 
+#include <string.h>
+
 Mesh *create_cube_mesh()
 {
     typedef struct vertex
@@ -77,11 +79,11 @@ Mesh *create_cylinder_mesh(unsigned int detail)
         float tex_x, tex_y;
     } Vertex;
 
-    size_t verticies_size = sizeof(Vertex) * (detail * 2 + 2);
+    size_t verticies_size = sizeof(Vertex) * (detail * 2 + 2 + 2);
     Vertex *verticies = malloc(verticies_size);
 
     int i;
-    for(int i = 0; i < detail; ++i)
+    for(i = 0; i < detail + 1; ++i)
     {
         float theta = GLM_PI * 2 / detail * i;
         float x = cosf(theta);
@@ -95,54 +97,56 @@ Mesh *create_cylinder_mesh(unsigned int detail)
         verticies[i].b = 0;
         verticies[i].tex_x = theta / (2 * GLM_PI);
         verticies[i].tex_y = 0.f;
-        verticies[i + detail].x = x;
-        verticies[i + detail].y = y;
-        verticies[i + detail].z = .5f;
-        verticies[i + detail].r = (x + 1) / 2;
-        verticies[i + detail].g = (y + 1) / 2;
-        verticies[i + detail].b = 1;
-        verticies[i + detail].tex_x = theta / (2 * GLM_PI);
-        verticies[i + detail].tex_y = 1.f;
+        verticies[i + (detail + 1)].x = x;
+        verticies[i + (detail + 1)].y = y;
+        verticies[i + (detail + 1)].z = .5f;
+        verticies[i + (detail + 1)].r = (x + 1) / 2;
+        verticies[i + (detail + 1)].g = (y + 1) / 2;
+        verticies[i + (detail + 1)].b = 1;
+        verticies[i + (detail + 1)].tex_x = theta / (2 * GLM_PI);
+        verticies[i + (detail + 1)].tex_y = 1.f;
     }
-    verticies[detail * 2].x = 0;
-    verticies[detail * 2].y = 0;
-    verticies[detail * 2].z = -0.5f;
-    verticies[detail * 2].r = 0;
-    verticies[detail * 2].g = 0;
-    verticies[detail * 2].b = 0;
-    verticies[detail * 2].tex_x = 0.f;
-    verticies[detail * 2].tex_y = 0.f;
-    verticies[detail * 2 + 1].x = 0;
-    verticies[detail * 2 + 1].y = 0;
-    verticies[detail * 2 + 1].z = 0.5f;
-    verticies[detail * 2 + 1].r = 0;
-    verticies[detail * 2 + 1].g = 0;
-    verticies[detail * 2 + 1].b = 1;
-    verticies[detail * 2 + 1].tex_x = 1.f;
-    verticies[detail * 2 + 1].tex_y = 1.f;
+    verticies[detail * 2 + 2].x = 0;
+    verticies[detail * 2 + 2].y = 0;
+    verticies[detail * 2 + 2].z = -0.5f;
+    verticies[detail * 2 + 2].r = 0;
+    verticies[detail * 2 + 2].g = 0;
+    verticies[detail * 2 + 2].b = 0;
+    verticies[detail * 2 + 2].tex_x = 0.f;
+    verticies[detail * 2 + 2].tex_y = 0.f;
+    verticies[detail * 2 + 3].x = 0;
+    verticies[detail * 2 + 3].y = 0;
+    verticies[detail * 2 + 3].z = 0.5f;
+    verticies[detail * 2 + 3].r = 0;
+    verticies[detail * 2 + 3].g = 0;
+    verticies[detail * 2 + 3].b = 1;
+    verticies[detail * 2 + 3].tex_x = 1.f;
+    verticies[detail * 2 + 3].tex_y = 1.f;
 
     typedef unsigned int Index;
 
-    size_t indicies_size = sizeof(Index) * (detail * 12);
+    size_t indicies_size = sizeof(Index) * (detail * 12 + 2);
     Index *indicies = malloc(indicies_size);
+    memset(indicies, 0, indicies_size); // REMOVE STRING.H
 
-    for(int i = 0; i < detail; ++i)
+    for(i = 0; i < detail; ++i)
     {
-        indicies[i * 6 + 0] = (0 + i);
-        indicies[i * 6 + 1] = (1 + i) % detail;
-        indicies[i * 6 + 2] = (1 + i) % detail + detail;
-        indicies[i * 6 + 3] = (1 + i) % detail + detail;
-        indicies[i * 6 + 4] = (0 + i)          + detail;
-        indicies[i * 6 + 5] = (0 + i);
+        int offset = i * 6;
+        indicies[offset + 0] = i + 0;
+        indicies[offset + 1] = i + (detail + 1) + 1;
+        indicies[offset + 2] = i + (detail + 1);
+        indicies[offset + 3] = indicies[offset + 0];
+        indicies[offset + 4] = i + 1;
+        indicies[offset + 5] = indicies[offset + 1];
     }
-    for(int i = 0; i < detail; ++i)
+    for(i = 0; i < detail; ++i)
     {
-        indicies[(detail + i) * 6 + 0] = detail * 2;
-        indicies[(detail + i) * 6 + 1] = (1 + i) % detail;
-        indicies[(detail + i) * 6 + 2] = (0 + i);
-        indicies[(detail + i) * 6 + 3] = (0 + i)          + detail;
-        indicies[(detail + i) * 6 + 4] = (1 + i) % detail + detail;
-        indicies[(detail + i) * 6 + 5] = detail * 2 + 1;
+        indicies[(detail + i) * 6 + 0] = (detail + 1) + i;
+        indicies[(detail + i) * 6 + 1] = (detail + 1) + 1 + i;
+        indicies[(detail + i) * 6 + 2] = (detail + 1) * 2 + 1;
+        indicies[(detail + i) * 6 + 3] = i;
+        indicies[(detail + i) * 6 + 4] = 1 + i;
+        indicies[(detail + i) * 6 + 5] = (detail + 1) * 2;
     }
 
     Mesh* mesh = malloc(sizeof(Mesh));
