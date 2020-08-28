@@ -39,11 +39,9 @@ void draw_model(Model *entity)
     mat4 model = GLM_MAT4_IDENTITY_INIT;
     glm_translate(model, entity->position);
     glm_scale(model, entity->scale);
-    glm_rotate_x(model, entity->rotation[0], model);
-    glm_rotate_y(model, entity->rotation[1], model);
-    glm_rotate_z(model, entity->rotation[2], model);
-
-    mat4 projection = GLM_MAT4_IDENTITY_INIT;
+    mat4 rotated;
+    glm_euler_xyz(entity->rotation, rotated);
+    glm_mul(model, rotated, model);
 
     glUniformMatrix4fv(model_loc, 1, GL_FALSE, model[0]);
     glUniformMatrix4fv(view_loc, 1, GL_FALSE, global_view[0]);
