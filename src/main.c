@@ -13,7 +13,6 @@
 #include "Texture.h"
 #include "Sprite.h"
 #include "Util.h"
-#include "Entity.h"
 
 #include <time.h>
 
@@ -21,7 +20,6 @@
 
 static int width = 1920, height = 1080;
 
-Entity *entities[7];
 Model *models[6];
 Sprite *crosshair;
 clock_t last_frame;
@@ -145,11 +143,6 @@ static void setup()
     crosshair->position[0] = width / 2.f;
     crosshair->position[1] = height / 2.f;
 
-    for(int i = 0; i < 6; ++i)
-        entities[i] = create_entity(models[i], ENTITY_TYPE_MODEL);
-    
-    entities[6] = create_entity(crosshair, ENTITY_TYPE_SPRITE);
-
     last_frame = clock();
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
@@ -264,9 +257,9 @@ static void display(void)
     glm_mul(proj, view, proj_view);
 
     {
-        models[5]->position[0] = sinf(shaded_cube_angle) * 2;
-        models[5]->position[1] = 0.0f;
-        models[5]->position[2] = cosf(shaded_cube_angle) * 2 + 6.0f;
+        models[5]->position[0] = sinf(shaded_cube_angle) * 4.0f;
+        models[5]->position[1] = 3.0f;
+        models[5]->position[2] = cosf(shaded_cube_angle) * 4.0f + 6.0f;
 
         shaded_cube_angle += delta;
         shaded_cube_angle = fmodf(shaded_cube_angle, GLM_PI * 2);
@@ -291,8 +284,10 @@ static void display(void)
     }
 
     int i;
-    for(i = 0; i < 7; ++i)
-        draw_entity(entities[i], proj_view);
+    for(i = 0; i < 6; ++i)
+        draw_model(models[i], proj_view);
+    for(i = 0; i < 1; ++i)
+        draw_sprite(crosshair);
 
     glutSwapBuffers();
     glutPostRedisplay();
