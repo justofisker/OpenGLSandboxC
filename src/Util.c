@@ -6,8 +6,8 @@
 const char* get_file_content(const char *path, long *length)
 {
     FILE* file;
-    file = fopen(path, "rb");
-    if(!file)
+    errno_t err = fopen_s(&file, path, "rb");
+    if(!file || err)
     {
         printf("Failed to open %s", path);
         return NULL;
