@@ -156,7 +156,7 @@ static float shaded_cube_angle = 0.0f;
 static void display(void)
 {
     clock_t cur_time = clock();
-    float delta = (cur_time - last_frame) / (float)(CLOCKS_PER_SEC);
+    float delta = (cur_time - last_frame) / (float)(CLOCKS_PER_SEC) * 100;
     handle_mouse();
     handle_movement(delta);
     last_frame = cur_time;

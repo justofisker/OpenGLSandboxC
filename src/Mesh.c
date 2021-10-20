@@ -81,7 +81,7 @@ Mesh *create_cube_mesh(float size)
 
 Mesh *create_cylinder_mesh(int _verticies, float radius, float depth)
 {
-    _verticies = max(_verticies, 3);
+    _verticies = _verticies > 3 ? _verticies : 3;
 
     typedef struct Vertex {
         vec3 position;
